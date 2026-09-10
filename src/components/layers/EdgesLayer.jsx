@@ -1,4 +1,5 @@
 import React from 'react';
+import { createHoverProps } from '../../utils/helpers.js';
 
 export const EdgesLayer = React.memo(({ edges, nodes, facesWithNumbers, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget, fractionDigits }) => {
   const invZoom = 1 / camera.zoom;

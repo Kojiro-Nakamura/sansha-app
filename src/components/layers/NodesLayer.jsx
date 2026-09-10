@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { createHoverProps } from '../../utils/helpers.js';
 
 export const NodesLayer = React.memo(({ nodes, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget }) => {
   const invZoom = 1 / camera.zoom;

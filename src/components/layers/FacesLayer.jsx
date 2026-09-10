@@ -1,5 +1,6 @@
 import React from 'react';
 import { defaultSlopeTypes } from '../../constants/defaults.js';
+import { createHoverProps } from '../../utils/helpers.js';
 
 export const FacesLayer = React.memo(({ facesWithNumbers, faceTypes, faceDeductions, slopeTypes, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget, fractionDigits, currentMode }) => {
   const invZoom = 1 / camera.zoom;

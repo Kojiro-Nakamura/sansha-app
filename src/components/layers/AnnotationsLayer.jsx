@@ -1,5 +1,6 @@
 import React from 'react';
 import { getSvgPathFromPoints } from '../../utils/geometry.js';
+import { createHoverProps } from '../../utils/helpers.js';
 
 export const AnnotationsLayer = React.memo(({ lines, texts, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget }) => {
   const invZoom = 1 / camera.zoom;
