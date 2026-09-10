@@ -1,0 +1,2411 @@
+import React, { useState, useRef, useMemo, useEffect } from 'react';
+
+// ==========================================
+// 1. Icons (SVG Components)
+// ==========================================
+const IconMousePointer2 = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg>;
+const IconTriangle = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 20h18L12 4z"/></svg>;
+const IconMinus = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="5" y1="12" x2="19" y2="12"/></svg>;
+const IconType = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>;
+const IconUndo2 = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>;
+const IconRedo2 = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5v0A5.5 5.5 0 0 0 9.5 20H13"/></svg>;
+const IconEraser = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>;
+const IconTrash2 = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>;
+const IconMaximize = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>;
+const IconPrinter = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>;
+const IconDownload = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>;
+const IconUpload = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>;
+const IconAlertCircle = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>;
+const IconInfo = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>;
+const WaveIcon = ({ size = 24, className }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M4 12c3-4.5 5-4.5 8 0s5 4.5 8 0" /></svg>;
+
+// ==========================================
+// 2. Constants & Defaults
+// ==========================================
+const generateId = () => Math.random().toString(36).substr(2, 9);
+
+const defaultSlopeTypes = [
+  { id: 't1', name: '未設定', shortName: '未', color: '#94a3b8' }, 
+  { id: 't2', name: 'モルタル吹付', shortName: 'モ', color: '#0ea5e9' }, 
+  { id: 't3', name: '植生基盤吹付', shortName: '植', color: '#f97316' }, 
+  { id: 't4', name: '緑化材A', shortName: '緑A', color: '#22c55e' }, 
+  { id: 't5', name: '緑化材B', shortName: '緑B', color: '#eab308' }, 
+];
+
+const defaultAttributes = [
+  { id: "aa5m69ol6", key: "年度", value: "令和8年度" },
+  { id: "vhjyzhaz4", key: "事業名", value: "〇〇事業" },
+  { id: "mcfogk9gt", key: "工事箇所", value: "××町～～" }
+];
+
+const defaultNodes = [
+  { id: "xvslsq8pk", x: 286.356124844675, y: 89.56166051595218 },
+  { id: "388jd823t", x: 291.8364549011752, y: 286.20014948532554 },
+  { id: "mxiviecm0", x: 202.60963420261047, y: 305.49623932833424 },
+  { id: "ecyu9vdei", x: 369.2815714608369, y: 76.42495610151069 },
+  { id: "afbjq43kf", x: 423.45478592656934, y: 279.9740539899585 },
+  { id: "8mtzu9i7d", x: 456.3122382065118, y: 92.84583661956256 },
+  { id: "ecw452mqd", x: 537.5955967708685, y: 128.97177375927666 },
+  { id: "mrfb60b7s", x: 564.6900496256542, y: 298.10684309521093 },
+  { id: "l6cr5lohv", x: 212.4621625134416, y: 126.50864168156889 },
+  { id: "dllicnwa2", x: 287.1771688705776, y: 41.941107013601766 },
+  { id: "bev0ml4i7", x: 364.45409855842183, y: 8.2994111192106 },
+  { id: "bh93dd3o7", x: 459.25240477379504, y: 30.016917384689826 },
+  { id: "qk0zocbq1", x: 340.26597002932186, y: 267.23539319870093 },
+  { id: "j1igzez2u", x: 345.45582881211857, y: 230.10794190638597 },
+  { id: "c5lyc2ivu", x: 393.76143748276496, y: 226.91418265543413 },
+  { id: "z9hh5jqbs", x: 404.14115504835837, y: 264.8400737604871 }
+];
+
+const defaultEdges = [
+  { id: "ogsn6upt8", source: "xvslsq8pk", target: "388jd823t", length: 10 },
+  { id: "iicpbe2ud", source: "388jd823t", target: "mxiviecm0", length: 5 },
+  { id: "m3o1wq3hv", source: "mxiviecm0", target: "xvslsq8pk", length: 12 },
+  { id: "59h0yojll", source: "xvslsq8pk", target: "ecyu9vdei", length: 4 },
+  { id: "yk3z7wbr3", source: "ecyu9vdei", target: "388jd823t", length: 10 },
+  { id: "t6eaaalm0", source: "388jd823t", target: "afbjq43kf", length: 6 },
+  { id: "lvzkmsd9w", source: "afbjq43kf", target: "ecyu9vdei", length: 10 },
+  { id: "6tn3xb662", source: "ecyu9vdei", target: "8mtzu9i7d", length: 5 },
+  { id: "hdova895s", source: "8mtzu9i7d", target: "afbjq43kf", length: 9 },
+  { id: "gxml92x2d", source: "afbjq43kf", target: "ecw452mqd", length: 8 },
+  { id: "115c5a8pj", source: "ecw452mqd", target: "8mtzu9i7d", length: 4 },
+  { id: "6ul66iclm", source: "ecw452mqd", target: "mrfb60b7s", length: 7 },
+  { id: "428rooks4", source: "mrfb60b7s", target: "afbjq43kf", length: 6 },
+  { id: "tln5j07fj", source: "mxiviecm0", target: "l6cr5lohv", length: 9 },
+  { id: "sqr72lwla", source: "l6cr5lohv", target: "xvslsq8pk", length: 4 },
+  { id: "2k5xf21nr", source: "l6cr5lohv", target: "dllicnwa2", length: 6 },
+  { id: "lggzd347l", source: "dllicnwa2", target: "xvslsq8pk", length: 3 },
+  { id: "1xh1npys1", source: "dllicnwa2", target: "ecyu9vdei", length: 4 },
+  { id: "ck3injgkc", source: "dllicnwa2", target: "bev0ml4i7", length: 4 },
+  { id: "2end9is6p", source: "bev0ml4i7", target: "ecyu9vdei", length: 3 },
+  { id: "tj0aqt3v5", source: "bev0ml4i7", target: "bh93dd3o7", length: 5 },
+  { id: "ifx9oab56", source: "bh93dd3o7", target: "ecyu9vdei", length: 5 },
+  { id: "54yo2sp1v", source: "bh93dd3o7", target: "8mtzu9i7d", length: 3 },
+  { id: "71b6k3l39", source: "bh93dd3o7", target: "ecw452mqd", length: 6 },
+  { id: "nbqahirej", source: "qk0zocbq1", target: "j1igzez2u", length: 2 },
+  { id: "93q0cqkcm", source: "j1igzez2u", target: "c5lyc2ivu", length: 2 },
+  { id: "5qdtj1qz6", source: "c5lyc2ivu", target: "qk0zocbq1", length: 2.5 },
+  { id: "ixyqb1nk8", source: "c5lyc2ivu", target: "z9hh5jqbs", length: 2 },
+  { id: "9ja28jtip", source: "z9hh5jqbs", target: "qk0zocbq1", length: 2 }
+];
+
+const defaultLines = [
+  {
+    id: "lxvcn0464",
+    points: [ { x: 186.2308565668053, y: 329.3730879345007 }, { x: 296.9544169422594, y: 304.44502262084075 }, { x: 422.94220650048675, y: 297.7077076712029 }, { x: 563.7520889479173, y: 316.57218953018884 }, { x: 590.1043516495623, y: 320.29163282469966 } ],
+    color: "#64748b",
+    strokeWidth: 2,
+    strokeDasharray: "none",
+    isCurve: true
+  },
+  {
+    id: "hvkc2t59c",
+    points: [ { x: 187.89833663326746, y: 375.9665808458053 }, { x: 299.67643368640006, y: 348.4156414313008 }, { x: 425.89417487909884, y: 339.7567747581708 }, { x: 591.9869810636832, y: 361.79752628977445 } ],
+    color: "#64748b",
+    strokeWidth: 2,
+    strokeDasharray: "none",
+    isCurve: true
+  }
+];
+
+const defaultTexts = [
+  { id: "ddv58kpi8", x: 213.7441031216585, y: 347.40439220551326, text: "← 至 〇〇市", color: "#334155", fontSize: 8, rotation: -17.136005351957543 },
+  { id: "ltrqzek1d", x: 559.2602789089641, y: 339.4531831392782, text: "至 △△町 →", color: "#334155", fontSize: 8, rotation: 11.33224463755758 },
+  { id: "i014p5vwc", x: 383.2522885664701, y: 319.170701457297, text: "林道◇◇線", color: "#334155", fontSize: 8, rotation: 0 }
+];
+
+const defaultFaceTypes = {
+  "face-388jd823t-afbjq43kf-ecyu9vdei": "t2",
+  "face-388jd823t-mxiviecm0-xvslsq8pk": "t2",
+  "face-388jd823t-ecyu9vdei-xvslsq8pk": "t2",
+  "face-l6cr5lohv-mxiviecm0-xvslsq8pk": "t2",
+  "face-8mtzu9i7d-afbjq43kf-ecyu9vdei": "t2",
+  "face-8mtzu9i7d-afbjq43kf-ecw452mqd": "t2",
+  "face-afbjq43kf-ecw452mqd-mrfb60b7s": "t2",
+  "face-dllicnwa2-l6cr5lohv-xvslsq8pk": "t3",
+  "face-dllicnwa2-ecyu9vdei-xvslsq8pk": "t3",
+  "face-bev0ml4i7-dllicnwa2-ecyu9vdei": "t3",
+  "face-bev0ml4i7-bh93dd3o7-ecyu9vdei": "t3",
+  "face-8mtzu9i7d-bh93dd3o7-ecyu9vdei": "t3",
+  "face-8mtzu9i7d-bh93dd3o7-ecw452mqd": "t3",
+  "face-c5lyc2ivu-j1igzez2u-qk0zocbq1": "t2",
+  "face-c5lyc2ivu-qk0zocbq1-z9hh5jqbs": "t2"
+};
+
+const defaultFaceDeductions = {
+  "face-c5lyc2ivu-j1igzez2u-qk0zocbq1": true,
+  "face-c5lyc2ivu-qk0zocbq1-z9hh5jqbs": true
+};
+
+const defaultFractionDigits = 2;
+
+const initialDragState = {
+  isDragging: false, type: null, sourceNodeId: null,
+  startX: 0, startY: 0, currentX: 0, currentY: 0,
+  initCamera: null, isNewNode: false, logicalStartX: 0, logicalStartY: 0,
+  trackingNodeIds: [], triangleNode1: null, triangleNode2: null, isNode2New: false,
+  edge1Id: null, targetType: null, targetId: null, initialLine: null, initialText: null,
+  activeLinePoints: [], isCurveMode: false,
+  initialNodes: [], initialLines: [], initialTexts: [],
+  elementsToMove: { nodeIds: new Set(), lineIds: new Set(), textIds: new Set() },
+  centerX: 0, centerY: 0
+};
+
+// ==========================================
+// 3. Pure Logic & Geometry Utilities
+// ==========================================
+const getSvgPathFromPoints = (points, isCurve) => {
+  if (!points || points.length === 0) return "";
+  if (points.length === 1) return `M ${points[0].x} ${points[0].y}`;
+  if (!isCurve || points.length === 2) return `M ${points[0].x} ${points[0].y} ` + points.slice(1).map(p => `L ${p.x} ${p.y}`).join(' ');
+
+  let d = `M ${points[0].x} ${points[0].y}`;
+  const tension = 1;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i === 0 ? 0 : i - 1], p1 = points[i], p2 = points[i + 1], p3 = points[i + 2 === points.length ? i + 1 : i + 2];
+    const cp1x = p1.x + (p2.x - p0.x) / 6 * tension, cp1y = p1.y + (p2.y - p0.y) / 6 * tension;
+    const cp2x = p2.x - (p3.x - p1.x) / 6 * tension, cp2y = p2.y - (p3.y - p1.y) / 6 * tension;
+    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+  }
+  return d;
+};
+
+const getLogicalPoint = (cx, cy, camera, svgRect) => {
+  if (!svgRect) return { x: 0, y: 0 };
+  return { x: (cx - svgRect.left - camera.x) / camera.zoom, y: (cy - svgRect.top - camera.y) / camera.zoom };
+};
+
+const getEdgeSnapPoint = (pt, edge, currentNodes) => {
+  let snapX = pt.x, snapY = pt.y;
+  if (edge) {
+    const n1 = currentNodes.find(n => n.id === edge.source), n2 = currentNodes.find(n => n.id === edge.target);
+    if (n1 && n2) {
+      const dx = n2.x - n1.x, dy = n2.y - n1.y, lenSq = dx * dx + dy * dy;
+      if (lenSq > 0) {
+        const t = Math.max(0, Math.min(1, ((pt.x - n1.x) * dx + (pt.y - n1.y) * dy) / lenSq));
+        snapX = n1.x + t * dx; snapY = n1.y + t * dy;
+      }
+    }
+  }
+  return { x: snapX, y: snapY };
+};
+
+const computeFaces = (nodes, edges, fractionDigits) => {
+  const newFaces = [];
+  const edgeMap = new Map();
+  edges.forEach(e => { edgeMap.set(`${e.source}-${e.target}`, e); edgeMap.set(`${e.target}-${e.source}`, e); });
+
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      for (let k = j + 1; k < nodes.length; k++) {
+        const u = nodes[i].id, v = nodes[j].id, w = nodes[k].id;
+        const e1 = edgeMap.get(`${u}-${v}`), e2 = edgeMap.get(`${v}-${w}`), e3 = edgeMap.get(`${w}-${u}`);
+        if (e1 && e2 && e3) {
+          let area = null, status = 'missing_length';
+          const a = e1.length, b = e2.length, c = e3.length;
+          
+          if (a !== null && b !== null && c !== null) {
+            const epsilon = 1e-4; 
+            if (a + b > c + epsilon && b + c > a + epsilon && c + a > b + epsilon) {
+              const s = (a + b + c) / 2;
+              const rawArea = Math.sqrt(Math.max(0, s * (s - a) * (s - b) * (s - c)));
+              const multiplier = Math.pow(10, fractionDigits);
+              area = Math.round(rawArea * multiplier) / multiplier;
+              status = 'valid';
+            } else if (Math.abs(a + b - c) <= epsilon || Math.abs(b + c - a) <= epsilon || Math.abs(c + a - b) <= epsilon) {
+              continue; 
+            } else {
+              status = 'invalid_triangle';
+            }
+          }
+          const sortedIds = [u, v, w].sort();
+          newFaces.push({ id: `face-${sortedIds[0]}-${sortedIds[1]}-${sortedIds[2]}`, nodes: [nodes[i], nodes[j], nodes[k]], edges: [e1, e2, e3], area, status });
+        }
+      }
+    }
+  }
+  return newFaces;
+};
+
+const computeFacesWithNumbers = (faces, faceTypes) => {
+  const counters = {};
+  return faces.map(face => {
+    let number = null;
+    if (face.status === 'valid') {
+      const typeId = faceTypes[face.id] || 't1';
+      counters[typeId] = (counters[typeId] || 0) + 1;
+      number = counters[typeId];
+    }
+    return { ...face, number };
+  });
+};
+
+const getActiveMovableElements = (selectedIds, nodes, lines, texts, edges, faces) => {
+  const nodeIds = new Set(), lineIds = new Set(), textIds = new Set();
+  selectedIds.forEach(id => {
+    if (nodes.find(n => n.id === id)) nodeIds.add(id);
+    else if (lines.find(l => l.id === id)) lineIds.add(id);
+    else if (texts.find(t => t.id === id)) textIds.add(id);
+    else if (edges.find(e => e.id === id)) {
+      const eObj = edges.find(e => e.id === id);
+      nodeIds.add(eObj.source); nodeIds.add(eObj.target);
+    }
+    else if (faces.find(f => f.id === id)) {
+      const fObj = faces.find(f => f.id === id);
+      fObj.nodes.forEach(n => nodeIds.add(n.id));
+    }
+  });
+  return { nodeIds, lineIds, textIds };
+};
+
+const getSelectionBoundingBox = (nodes, lines, texts, elementsToMove) => {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  let hasItem = false;
+  const updateBBox = (x, y) => { minX=Math.min(minX,x); minY=Math.min(minY,y); maxX=Math.max(maxX,x); maxY=Math.max(maxY,y); hasItem = true; };
+
+  nodes.forEach(n => { if (elementsToMove.nodeIds.has(n.id)) updateBBox(n.x, n.y); });
+  lines.forEach(l => { if (elementsToMove.lineIds.has(l.id)) l.points.forEach(p => updateBBox(p.x, p.y)); });
+  texts.forEach(t => { if (elementsToMove.textIds.has(t.id)) updateBBox(t.x, t.y); });
+
+  if (!hasItem) return null;
+  return { minX, minY, maxX, maxY, w: maxX - minX, h: maxY - minY, cx: (minX + maxX)/2, cy: (minY + maxY)/2 };
+};
+
+const calculateDisplayBoundingBox = (nodes, lines, texts, edges, facesWithNumbers) => {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  let hasItem = false;
+  const updateBBox = (x, y) => { minX=Math.min(minX,x); minY=Math.min(minY,y); maxX=Math.max(maxX,x); maxY=Math.max(maxY,y); hasItem = true; };
+
+  nodes.forEach(n => {
+    updateBBox(n.x, n.y);
+    updateBBox(n.x - 15, n.y - 15); 
+    updateBBox(n.x + 15, n.y + 15);
+  });
+  
+  lines.forEach(l => {
+    l.points.forEach(p => {
+      updateBBox(p.x, p.y);
+      if (l.isCurve) {
+        updateBBox(p.x - 50, p.y - 50);
+        updateBBox(p.x + 50, p.y + 50);
+      }
+    });
+  });
+  
+  texts.forEach(t => {
+    updateBBox(t.x, t.y);
+    updateBBox(t.x - 60, t.y - 30);
+    updateBBox(t.x + 60, t.y + 30);
+  });
+  
+  if (edges && facesWithNumbers) {
+    edges.forEach(edge => {
+      const n1 = nodes.find(n => n.id === edge.source), n2 = nodes.find(n => n.id === edge.target);
+      if (!n1 || !n2) return;
+      const cx = (n1.x + n2.x) / 2, cy = (n1.y + n2.y) / 2, dx = n2.x - n1.x, dy = n2.y - n1.y, len = Math.hypot(dx, dy);
+      let targetX = cx, targetY = cy, hasTarget = false, offsetX = 0, offsetY = -14;
+      const adjFace = facesWithNumbers.find(f => f.edges.some(e => e?.id === edge.id));
+      if (adjFace) { targetX = adjFace.nodes.reduce((s, n) => s + n.x, 0) / 3; targetY = adjFace.nodes.reduce((s, n) => s + n.y, 0) / 3; hasTarget = true; }
+      if (len > 0) {
+        let nx = -dy / len, ny = dx / len;
+        if (hasTarget && nx * (targetX - cx) + ny * (targetY - cy) < 0) { nx = -nx; ny = -ny; } else if (!hasTarget && ny > 0) { nx = -nx; ny = -ny; }
+        offsetX = nx * 14; offsetY = ny * 14;
+      }
+      updateBBox(cx + offsetX - 40, cy + offsetY - 25);
+      updateBBox(cx + offsetX + 40, cy + offsetY + 25);
+    });
+  }
+
+  if (!hasItem) return null;
+  return { minX, minY, maxX, maxY, w: Math.max(1, maxX - minX), h: Math.max(1, maxY - minY) };
+};
+
+// ==========================================
+// 4. Data Migration Utility
+// ==========================================
+const migrateData = (parsed) => {
+  if (!parsed || !parsed.nodes || !parsed.edges) return null;
+
+  const importedLines = (parsed.lines || []).map(l => ({
+    ...l,
+    points: l.points || [{ x: l.x1 || 0, y: l.y1 || 0 }, { x: l.x2 || 0, y: l.y2 || 0 }],
+    isCurve: !!l.isCurve,
+    strokeWidth: l.strokeWidth ?? 2,
+    color: l.color ?? '#64748b',
+    strokeDasharray: l.strokeDasharray ?? 'none'
+  }));
+
+  const importedTexts = (parsed.texts || []).map(t => ({
+    ...t,
+    rotation: t.rotation ?? 0,
+    fontSize: t.fontSize === 16 ? 8 : (t.fontSize ?? 8),
+    color: t.color ?? '#334155'
+  }));
+
+  const importedFaceDeductions = parsed.faceDeductions || {};
+
+  const oldDeductionTypeIds = new Set((parsed.slopeTypes || []).filter(t => t.isDeduction).map(t => t.id));
+  if (parsed.faceTypes && oldDeductionTypeIds.size > 0) {
+    Object.entries(parsed.faceTypes).forEach(([faceId, typeId]) => {
+      if (oldDeductionTypeIds.has(typeId)) {
+        importedFaceDeductions[faceId] = true;
+      }
+    });
+  }
+
+  const importedSlopeTypes = (parsed.slopeTypes || defaultSlopeTypes)
+    .filter(st => !st.isDeduction)
+    .map(st => ({
+      ...st,
+      shortName: st.shortName || (st.name ? st.name.charAt(0) : '未'),
+      color: st.color ?? '#94a3b8'
+    }));
+
+  return {
+    nodes: parsed.nodes,
+    edges: parsed.edges.map(e => ({ ...e, length: e.length === undefined ? null : e.length })),
+    lines: importedLines,
+    texts: importedTexts,
+    faceTypes: parsed.faceTypes || {},
+    faceDeductions: importedFaceDeductions,
+    slopeTypes: importedSlopeTypes.length > 0 ? importedSlopeTypes : defaultSlopeTypes,
+    fractionDigits: parsed.fractionDigits ?? 2,
+    attributes: parsed.attributes || defaultAttributes
+  };
+};
+
+const getInitialData = () => {
+  if (typeof window === 'undefined') return null;
+  try {
+    const saved = localStorage.getItem('sansha_draw_data');
+    if (saved) return migrateData(JSON.parse(saved));
+  } catch (e) { console.error("Failed to parse saved data", e); }
+  return null;
+};
+
+// ==========================================
+// 5. HTML Export Utility
+// ==========================================
+const exportToHTML = (printOptions, drawData) => {
+  const { size, orientation, colorMode, tableRowsLimit, scale, showAreaInPolygon, fontSizeMultiplier = 1.0, edgeTextOffset = 14 } = printOptions;
+  const { nodes, edges, lines, texts, faceTypes, faceDeductions, slopeTypes, fractionDigits, attributes, facesWithNumbers, totalArea } = drawData;
+
+  const bbox = calculateDisplayBoundingBox(nodes, lines, texts, edges, facesWithNumbers);
+  let minX = 0, minY = 0, w = 100, h = 100;
+  if (bbox) { minX = bbox.minX; minY = bbox.minY; w = bbox.w; h = bbox.h; }
+  
+  const pad = Math.max(w, h) * 0.03; 
+  const vbMinX = minX - pad, vbMinY = minY - pad, vbW = w + pad*2, vbH = h + pad*2;
+
+  let svgWidthStyle = '100%', svgHeightStyle = '100%';
+  let svgMaxWidthStyle = '100%', svgMaxHeightStyle = '100%', svgFlexShrink = '1';
+  let drawingWidthStyle = '60%', drawingHeightStyle = '80%';
+  
+  let realLenSum = 0, svgLenSum = 0;
+  edges.forEach(e => {
+    if (e.length > 0) {
+      const n1 = nodes.find(n => n.id === e.source), n2 = nodes.find(n => n.id === e.target);
+      if (n1 && n2) { realLenSum += e.length; svgLenSum += Math.hypot(n1.x - n2.x, n1.y - n2.y); }
+    }
+  });
+  const pxPerMeter = realLenSum > 0 ? svgLenSum / realLenSum : 0;
+
+  if (scale !== 'auto') {
+    const numScale = parseInt(scale, 10);
+    if (pxPerMeter > 0) {
+      const mmPerPx = (1000 / numScale) / pxPerMeter;
+      svgWidthStyle = `${vbW * mmPerPx}mm`; svgHeightStyle = `${vbH * mmPerPx}mm`;
+      svgMaxWidthStyle = 'none'; svgMaxHeightStyle = 'none'; svgFlexShrink = '0';
+      drawingWidthStyle = svgWidthStyle;
+      drawingHeightStyle = svgHeightStyle;
+    }
+  }
+
+  const titleHTML = `<div class="draggable title-container" style="top: 15mm; left: 40%; z-index: 10;"><div style="font-size: 1em; font-weight: bold; letter-spacing: 0.2em; border-bottom: 3px solid currentColor; display: inline-block; padding: 0 10px 5px 10px;">展開図</div><div class="resize-handle no-print"></div></div>`;
+  const scaleLabelHTML = `<div class="draggable scale-container" id="scale-label-container" style="bottom: 20mm; right: 20mm; z-index: 10; display: ${scale === 'auto' ? 'none' : 'block'};">縮尺: 1/${scale}</div>`;
+
+  const attributesRowsHTML = attributes.filter(a => a.key || a.value).map(attr => `<tr><th style="text-align: left; width: 30%; background-color: #f8fafc; padding: 5px 10px; border: 1px solid #333;">${attr.key}</th><td style="text-align: left; padding: 5px 10px; border: 1px solid #333;">${attr.value}</td></tr>`).join('');
+  const attributesHTML = attributesRowsHTML ? `<div class="draggable attributes-container" style="top: 20mm; left: 20mm; z-index: 10;"><table style="width: 100%; border: 2px solid #333; margin: 0; background-color: white; border-collapse: collapse;">${attributesRowsHTML}</table><div class="resize-handle no-print"></div></div>` : '';
+
+  let defsHTML = `<defs>
+    <mask id="deduction-mask-print">
+      <rect x="-100000" y="-100000" width="200000" height="200000" fill="white" />`;
+  facesWithNumbers.forEach(face => {
+    if (faceDeductions[face.id] && face.status === 'valid') {
+      const pts = face.nodes.map(n => `${n.x},${n.y}`).join(' ');
+      defsHTML += `<polygon points="${pts}" fill="black" />`;
+    }
+  });
+  defsHTML += `</mask>
+    <pattern id="deduct-pattern-print" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="10" stroke="#ef4444" stroke-width="1.5" opacity="0.6" />
+    </pattern>
+  </defs>`;
+
+  let svgContent = `<svg viewBox="${vbMinX} ${vbMinY} ${vbW} ${vbH}" style="width: ${svgWidthStyle}; height: ${svgHeightStyle}; max-width: ${svgMaxWidthStyle}; max-height: ${svgMaxHeightStyle}; flex-shrink: ${svgFlexShrink}; font-family: sans-serif; display: block;" xmlns="http://www.w3.org/2000/svg">
+    ${defsHTML}`;
+
+  facesWithNumbers.forEach(face => {
+    const pts = face.nodes.map(n => `${n.x},${n.y}`).join(' '), typeId = faceTypes[face.id] || 't1', sType = slopeTypes.find(t => t.id === typeId) || slopeTypes[0] || defaultSlopeTypes[0];
+    const displayName = `${sType.shortName || sType.name.charAt(0)}${face.number}`;
+    const cx = face.nodes.reduce((s, n) => s + n.x, 0) / 3, cy = face.nodes.reduce((s, n) => s + n.y, 0) / 3;
+    const isDeduct = faceDeductions[face.id];
+
+    let fill = sType.color, fillOpacity = 0.4, stroke = "transparent", strokeW = 0, dashArray = "none";
+    if (isDeduct) { fill = "url(#deduct-pattern-print)"; fillOpacity = 1; stroke = sType.color; strokeW = 2; dashArray = "4 4"; }
+
+    if (face.status === 'invalid_triangle') { fill = "#e11d48"; fillOpacity = 0.2; stroke = "transparent"; dashArray = "none"; }
+    else if (face.status === 'missing_length') { fillOpacity = 0.1; stroke = sType.color; strokeW = 2; dashArray = "8 6"; }
+
+    let maskAttr = (!isDeduct && face.status === 'valid') ? `mask="url(#deduction-mask-print)"` : "";
+
+    svgContent += `<polygon points="${pts}" fill="${fill}" fill-opacity="${fillOpacity}" stroke="${stroke}" stroke-width="${strokeW}" stroke-dasharray="${dashArray}" stroke-linejoin="round" ${maskAttr} />`;
+
+    if (face.status === 'valid') {
+      const areaStr = face.area !== null ? (isDeduct ? `-${face.area.toFixed(fractionDigits)}` : face.area.toFixed(fractionDigits)) : '';
+      const nameY = showAreaInPolygon ? -5 * fontSizeMultiplier : 0;
+      svgContent += `<g class="svg-draggable" style="cursor: move; pointer-events: all; user-select: none;" transform="translate(0,0)">
+        <g class="face-text-group" transform="translate(${cx}, ${cy})">
+          <text class="text-outline dynamic-text face-name" data-base-size="6" data-base-stroke="1.5" data-base-y="-5" y="${nameY}" dominant-baseline="middle" text-anchor="middle" stroke="white" stroke-width="${1.5 * fontSizeMultiplier}" stroke-linejoin="round" fill="none" font-size="${6 * fontSizeMultiplier}" font-weight="bold" opacity="0.9">${displayName}</text>
+          <text class="dynamic-text face-name" data-base-size="6" data-base-y="-5" y="${nameY}" dominant-baseline="middle" text-anchor="middle" fill="#1e293b" font-size="${6 * fontSizeMultiplier}" font-weight="bold">${displayName}</text>
+          <g class="face-area-group" style="display: ${showAreaInPolygon ? 'block' : 'none'}">
+            <text class="text-outline dynamic-text face-area" data-base-size="7" data-base-stroke="2" data-base-y="3" y="${3 * fontSizeMultiplier}" dominant-baseline="middle" text-anchor="middle" stroke="white" stroke-width="${2 * fontSizeMultiplier}" stroke-linejoin="round" fill="none" font-size="${7 * fontSizeMultiplier}" font-weight="bold" opacity="0.9">${areaStr}㎡</text>
+            <text class="dynamic-text face-area" data-base-size="7" data-base-y="3" y="${3 * fontSizeMultiplier}" dominant-baseline="middle" text-anchor="middle" fill="#1e293b" font-size="${7 * fontSizeMultiplier}" font-weight="bold">${areaStr}㎡</text>
+          </g>
+        </g>
+      </g>`;
+    } else if (face.status === 'missing_length') {
+      const nameY = showAreaInPolygon ? -5 * fontSizeMultiplier : 0;
+      svgContent += `<g class="svg-draggable" style="cursor: move; pointer-events: all; user-select: none;" transform="translate(0,0)">
+        <g class="face-text-group" transform="translate(${cx}, ${cy})">
+          <text class="text-outline dynamic-text face-name" data-base-size="6" data-base-stroke="1.5" data-base-y="-5" y="${nameY}" dominant-baseline="middle" text-anchor="middle" stroke="white" stroke-width="${1.5 * fontSizeMultiplier}" stroke-linejoin="round" fill="none" font-size="${6 * fontSizeMultiplier}" font-weight="bold" opacity="0.7">${displayName}</text>
+          <text class="dynamic-text face-name" data-base-size="6" data-base-y="-5" y="${nameY}" dominant-baseline="middle" text-anchor="middle" fill="#94a3b8" font-size="${6 * fontSizeMultiplier}" font-weight="bold">${displayName}</text>
+          <g class="face-area-group" style="display: ${showAreaInPolygon ? 'block' : 'none'}">
+            <text class="text-outline dynamic-text face-area" data-base-size="7" data-base-stroke="2" data-base-y="3" y="${3 * fontSizeMultiplier}" dominant-baseline="middle" text-anchor="middle" stroke="white" stroke-width="${2 * fontSizeMultiplier}" stroke-linejoin="round" fill="none" font-size="${7 * fontSizeMultiplier}" font-weight="bold" opacity="0.7">? ㎡</text>
+            <text class="dynamic-text face-area" data-base-size="7" data-base-y="3" y="${3 * fontSizeMultiplier}" dominant-baseline="middle" text-anchor="middle" fill="#94a3b8" font-size="${7 * fontSizeMultiplier}" font-weight="bold">? ㎡</text>
+          </g>
+        </g>
+      </g>`;
+    } else {
+      svgContent += `<g class="svg-draggable" style="cursor: move; pointer-events: all; user-select: none;" transform="translate(0,0)">
+        <g class="face-text-group" transform="translate(${cx}, ${cy})">
+          <text class="dynamic-text invalid-mark" data-base-size="10" data-base-y="0" y="0" dominant-baseline="middle" text-anchor="middle" fill="#e11d48" font-size="${10 * fontSizeMultiplier}" font-weight="bold">!</text>
+        </g>
+      </g>`;
+    }
+  });
+
+  edges.forEach(edge => {
+    const n1 = nodes.find(n => n.id === edge.source), n2 = nodes.find(n => n.id === edge.target);
+    if (!n1 || !n2) return;
+    const cx = (n1.x + n2.x) / 2, cy = (n1.y + n2.y) / 2, dx = n2.x - n1.x, dy = n2.y - n1.y, len = Math.hypot(dx, dy), hasLength = edge.length !== null;
+    let targetX = cx, targetY = cy, hasTarget = false, offsetX = 0, offsetY = 0, nx = 0, ny = -1; 
+    const adjFace = facesWithNumbers.find(f => f.edges.some(e => e?.id === edge.id));
+    if (adjFace) { targetX = adjFace.nodes.reduce((s, n) => s + n.x, 0) / 3; targetY = adjFace.nodes.reduce((s, n) => s + n.y, 0) / 3; hasTarget = true; }
+    if (len > 0) {
+      nx = -dy / len; ny = dx / len;
+      if (hasTarget && nx * (targetX - cx) + ny * (targetY - cy) < 0) { nx = -nx; ny = -ny; } else if (!hasTarget && ny > 0) { nx = -nx; ny = -ny; }
+      offsetX = nx * edgeTextOffset; offsetY = ny * edgeTextOffset; 
+    }
+    let angle = Math.atan2(dy, dx) * (180 / Math.PI); if (angle > 90 || angle < -90) angle += 180;
+    const lengthText = hasLength ? Number(edge.length).toFixed(fractionDigits) : '?';
+    svgContent += `<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" stroke="${hasLength ? '#334155' : '#e11d48'}" stroke-width="2" stroke-dasharray="${hasLength ? 'none' : '4 4'}" />`;
+    
+    svgContent += `<g class="svg-draggable" style="cursor: move; pointer-events: all; user-select: none;" transform="translate(0,0)">
+      <g class="edge-text-group" transform="translate(${cx + offsetX}, ${cy + offsetY}) rotate(${angle})" data-cx="${cx}" data-cy="${cy}" data-nx="${nx}" data-ny="${ny}" data-angle="${angle}">
+        <text class="text-outline dynamic-text edge-text" data-base-size="8" data-base-stroke="2" data-base-y="0" y="0" dominant-baseline="middle" text-anchor="middle" stroke="white" stroke-width="${2 * fontSizeMultiplier}" stroke-linejoin="round" fill="none" font-size="${8 * fontSizeMultiplier}" font-weight="bold">${lengthText}</text>
+        <text class="dynamic-text edge-text" data-base-size="8" data-base-y="0" y="0" dominant-baseline="middle" text-anchor="middle" fill="${hasLength ? '#1e293b' : '#e11d48'}" font-size="${8 * fontSizeMultiplier}" font-weight="bold">${lengthText}</text>
+      </g>
+    </g>`;
+  });
+
+  lines.forEach(line => {
+    const d = getSvgPathFromPoints(line.points, line.isCurve);
+    svgContent += `<path d="${d}" fill="none" stroke="${line.color}" stroke-width="${line.strokeWidth}" stroke-dasharray="${line.strokeDasharray}" stroke-linecap="round" stroke-linejoin="round" />`;
+  });
+  texts.forEach(text => {
+    const strokeW = Math.max(1.5, text.fontSize * 0.25);
+    svgContent += `<g class="svg-draggable" style="cursor: move; pointer-events: all; user-select: none;" transform="translate(0,0)"><g transform="translate(${text.x}, ${text.y}) rotate(${text.rotation || 0})">
+      <text class="text-outline dynamic-text custom-text" data-base-size="${text.fontSize}" data-base-stroke="${strokeW}" data-base-y="0" y="0" dominant-baseline="middle" text-anchor="middle" stroke="white" stroke-width="${strokeW * fontSizeMultiplier}" stroke-linejoin="round" fill="none" font-size="${text.fontSize * fontSizeMultiplier}" font-weight="bold" opacity="0.9">${text.text}</text>
+      <text class="dynamic-text custom-text" data-base-size="${text.fontSize}" data-base-y="0" y="0" dominant-baseline="middle" text-anchor="middle" fill="${text.color}" font-size="${text.fontSize * fontSizeMultiplier}" font-weight="bold">${text.text}</text>
+    </g></g>`;
+  });
+
+  svgContent += `</svg>`;
+
+  const rawTableData = slopeTypes.map(type => {
+    const typeFaces = facesWithNumbers.filter(f => f.status === 'valid' && (faceTypes[f.id] || 't1') === type.id);
+    if (typeFaces.length === 0) return null;
+    const parentFaces = typeFaces.filter(f => !faceDeductions[f.id]);
+    const deductFaces = typeFaces.filter(f => faceDeductions[f.id]);
+    return {
+      id: type.id, name: type.name, color: type.color, shortName: type.shortName || type.name.charAt(0),
+      faces: typeFaces.map(f => {
+        const isDeduct = !!faceDeductions[f.id];
+        return {
+           id: f.id,
+           displayName: isDeduct ? `(控除)${type.shortName || type.name.charAt(0)}${f.number}` : `${type.shortName || type.name.charAt(0)}${f.number}`,
+           edges: [f.edges[0]?.length||0, f.edges[1]?.length||0, f.edges[2]?.length||0],
+           area: f.area, isDeduct
+        };
+      }),
+      parentTotal: parentFaces.reduce((sum, f) => sum + f.area, 0),
+      deductTotal: deductFaces.reduce((sum, f) => sum + f.area, 0),
+      netTotal: parentFaces.reduce((sum, f) => sum + f.area, 0) - deductFaces.reduce((sum, f) => sum + f.area, 0)
+    };
+  }).filter(Boolean);
+
+  const baseFontSize = size === 'A1' ? 24 : (size === 'A3' ? 16 : 12); 
+  const baseTableWidth = size === 'A1' ? 800 : (size === 'A3' ? 500 : 400);
+
+  // 初期の用紙サイズを計算
+  const initialPageWidth = size === 'A1' ? (orientation === 'landscape' ? '841mm' : '594mm') : size === 'A3' ? (orientation === 'landscape' ? '420mm' : '297mm') : (orientation === 'landscape' ? '297mm' : '210mm');
+  const initialPageHeight = size === 'A1' ? (orientation === 'landscape' ? '594mm' : '841mm') : size === 'A3' ? (orientation === 'landscape' ? '297mm' : '420mm') : (orientation === 'landscape' ? '210mm' : '297mm');
+
+  const html = `<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><title>三斜求積図 印刷プレビュー</title>
+<meta name="google" content="notranslate">
+<style id="dynamic-page-style">
+@page { size: ${size} ${orientation}; margin: 0; }
+</style>
+<style>
+.page-wrapper {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  transform-origin: center center;
+}
+
+body { font-family: 'Noto Sans JP', sans-serif; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; background-color: #e2e8f0; }
+.page { width: ${initialPageWidth}; height: ${initialPageHeight}; background-color: white; margin: 0 auto; position: relative; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); box-sizing: border-box; overflow: hidden; }
+.draggable { position: absolute; cursor: move; border: 1px dashed transparent; user-select: none; -webkit-user-select: none; touch-action: none; } .draggable:hover { border: 1px dashed #cbd5e1; }
+.drawing { width: 60%; height: 80%; top: 10mm; left: 10mm; display: flex; align-items: center; justify-content: center; background-color: transparent; }
+
+/* ポリゴンや線はクリックを透過させ、文字だけをドラッグ可能にする */
+.drawing svg polygon, .drawing svg line, .drawing svg path { pointer-events: none; }
+.drawing svg .svg-draggable { pointer-events: all; }
+
+.scale-container, .title-container, .table-container, .attributes-container { color: #1e293b; background-color: transparent; white-space: nowrap; } .scale-container { font-weight: bold; padding: 5px 10px; }
+.resize-handle { width: 15px; height: 15px; background-color: #3b82f6; position: absolute; right: 0; bottom: 0; cursor: nwse-resize; display: none; opacity: 0.8; } .draggable:hover .resize-handle { display: block; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 10px; background-color: white; } th, td { border: 1px solid #333; padding: 0.3em; text-align: center; } th { background-color: #f1f5f9; } .title { font-size: 1.5em; font-weight: bold; margin-bottom: 10px; text-align: center; }
+/* 白黒設定時にも白フチの視認性を確保するためのCSSを調整 */
+body.bw-mode svg polygon { fill: transparent !important; stroke: #111 !important; stroke-width: 2 !important; }
+body.bw-mode svg path, body.bw-mode svg polyline, body.bw-mode svg line { stroke: #111 !important; }
+body.bw-mode svg text { fill: #111 !important; stroke: none !important; }
+body.bw-mode svg text.text-outline { fill: none !important; stroke: white !important; }
+body.bw-mode th { background-color: #fff !important; }
+body.bw-mode .scale-container, body.bw-mode .title-container { color: #111 !important; }
+@media print { 
+  html, body { width: 100%; height: 100%; overflow: hidden; background-color: white; padding: 0 !important; margin: 0 !important; } 
+  #scroll-spacer { height: 100% !important; display: block !important; } 
+  .page-wrapper { transform: none !important; width: 100%; height: 100vh !important; display: flex; align-items: center; justify-content: center; } 
+  .page { margin: 0 auto; padding: 0; box-shadow: none; border: none; width: 100%; height: 100%; overflow: hidden; page-break-after: avoid; page-break-inside: avoid; } 
+  .draggable { border: none !important; } 
+  .resize-handle { display: none !important; } 
+  .no-print { display: none !important; } 
+}
+</style></head>
+<body class="${colorMode === 'bw' ? 'bw-mode' : ''}">
+<div id="control-panel" class="no-print" style="position: fixed; top: 0; left: 0; width: 100%; background: rgba(30, 41, 59, 0.95); color: white; padding: 12px 24px; box-sizing: border-box; z-index: 1000; font-family: sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; backdrop-filter: blur(4px);">
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+    <h3 style="margin: 0; font-size: 16px; font-weight: bold; display: flex; align-items: center; gap: 8px;">🖨️ プレビュー調整</h3>
+    <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <span style="font-size: 12px; font-weight: bold; color: #cbd5e1;">カラー</span>
+      <select id="setting-colormode" onchange="updateColorMode()" style="font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid #475569; outline:none; background:#334155; color:white; cursor:pointer;">
+        <option value="color" ${colorMode==='color'?'selected':''}>カラー</option>
+        <option value="bw" ${colorMode==='bw'?'selected':''}>白黒線画</option>
+      </select>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <span style="font-size: 12px; font-weight: bold; color: #cbd5e1;">用紙</span>
+      <select id="setting-size" onchange="updatePageStyle()" style="font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid #475569; outline:none; background:#334155; color:white; cursor:pointer;">
+        <option value="A4" ${size==='A4'?'selected':''}>A4</option>
+        <option value="A3" ${size==='A3'?'selected':''}>A3</option>
+        <option value="A1" ${size==='A1'?'selected':''}>A1</option>
+      </select>
+      <select id="setting-orientation" onchange="updatePageStyle()" style="font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid #475569; outline:none; background:#334155; color:white; cursor:pointer;">
+        <option value="landscape" ${orientation==='landscape'?'selected':''}>横向き</option>
+        <option value="portrait" ${orientation==='portrait'?'selected':''}>縦向き</option>
+      </select>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <span style="font-size: 12px; font-weight: bold; color: #cbd5e1;">縮尺</span>
+      <select id="setting-scale" onchange="updateScale()" style="font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid #475569; outline:none; background:#334155; color:white; cursor:pointer;">
+        <option value="auto" ${scale==='auto'?'selected':''}>自動</option>
+        <option value="50" ${scale==='50'?'selected':''}>1/50</option>
+        <option value="100" ${scale==='100'?'selected':''}>1/100</option>
+        <option value="200" ${scale==='200'?'selected':''}>1/200</option>
+        <option value="250" ${scale==='250'?'selected':''}>1/250</option>
+        <option value="500" ${scale==='500'?'selected':''}>1/500</option>
+        <option value="1000" ${scale==='1000'?'selected':''}>1/1000</option>
+      </select>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <span style="font-size: 12px; font-weight: bold; color: #cbd5e1;">文字倍率</span>
+      <input type="number" id="setting-font-mult" value="${fontSizeMultiplier}" step="0.1" min="0.5" max="5.0" oninput="updateVisuals()" onchange="updateVisuals()" style="width:50px; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid #475569; outline:none; background:#334155; color:white; text-align:center;" />
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <span style="font-size: 12px; font-weight: bold; color: #cbd5e1;">寸法距離</span>
+      <input type="number" id="setting-edge-offset" value="${edgeTextOffset}" step="1" min="0" max="100" oninput="updateVisuals()" onchange="updateVisuals()" style="width:50px; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid #475569; outline:none; background:#334155; color:white; text-align:center;" />
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <label style="font-size: 12px; font-weight: bold; color: #cbd5e1; display:flex; align-items:center; gap:4px; cursor:pointer;">
+        <input type="checkbox" id="setting-show-area" ${showAreaInPolygon ? 'checked' : ''} onchange="updateVisuals()" style="cursor:pointer;" />
+        面積表示
+      </label>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <span style="font-size: 12px; font-weight: bold; color: #cbd5e1;">表の行数</span>
+      <input type="number" id="setting-table-rows" value="${tableRowsLimit}" onchange="renderTables()" min="1" style="width:50px; font-size:12px; padding:4px 6px; border-radius:4px; border:1px solid #475569; outline:none; background:#334155; color:white; text-align:center;" />
+    </div>
+  </div>
+  <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+    <div style="display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 6px;">
+      <span style="font-size: 12px; font-weight: bold; color: #cbd5e1;">表示倍率</span>
+      <button onclick="changePageScale(-0.1)" style="background: #334155; color: white; border: none; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;">-</button>
+      <span id="scale-display" style="font-size: 13px; font-weight: bold; width: 40px; text-align: center;">100%</span>
+      <button onclick="changePageScale(0.1)" style="background: #334155; color: white; border: none; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center;">+</button>
+      <button onclick="fitToScreen()" style="background: #3b82f6; color: white; border: none; border-radius: 4px; padding: 0 8px; height: 24px; cursor: pointer; font-weight: bold; font-size: 11px; margin-left: 4px;" title="画面に合わせる">フィット</button>
+    </div>
+    <div style="display: flex; gap: 6px; align-items: center;">
+      <input type="text" id="setting-filename" value="${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}_展開図レイアウト.html" style="width: 180px; font-size:13px; padding:8px 10px; border-radius:6px; border:1px solid #475569; outline:none; background:#334155; color:white;" placeholder="ファイル名" />
+      <button onclick="saveAsHTML()" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.2s;">HTML保存</button>
+      <button onclick="window.print()" style="padding: 8px 24px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.2s;">印刷する</button>
+    </div>
+  </div>
+</div>
+<div id="scroll-spacer" style="width: 100%; transition: height 0.15s ease-out; display: flex; flex-direction: column; justify-content: center;">
+  <div class="page-wrapper" id="page-wrapper">
+    <div class="page">${titleHTML}${attributesHTML}<div class="draggable drawing" id="drawing" style="z-index: 5; width: ${drawingWidthStyle}; height: ${drawingHeightStyle};">${svgContent}<div class="resize-handle no-print"></div></div>${scaleLabelHTML}</div>
+  </div>
+</div>
+<script>
+  let pageScale = 1.0;
+  
+  const svgVbW = ${vbW};
+  const svgVbH = ${vbH};
+  const pxPerMeter = ${pxPerMeter};
+  const fractionDigits = ${fractionDigits};
+  const rawTableData = ${JSON.stringify(rawTableData)};
+  const totalArea = ${totalArea};
+  
+  let currentBaseTableFontSize = ${baseFontSize};
+  let currentBaseTableWidth = ${baseTableWidth};
+
+  function updateColorMode() {
+    const mode = document.getElementById('setting-colormode').value;
+    if (mode === 'bw') {
+      document.body.classList.add('bw-mode');
+    } else {
+      document.body.classList.remove('bw-mode');
+    }
+  }
+
+  function updateVisuals() {
+    const fontMult = parseFloat(document.getElementById('setting-font-mult').value) || 1.0;
+    const edgeOffset = parseFloat(document.getElementById('setting-edge-offset').value) || 0;
+    const showArea = document.getElementById('setting-show-area').checked;
+
+    document.querySelectorAll('.face-area-group').forEach(el => {
+      el.style.display = showArea ? 'block' : 'none';
+    });
+
+    document.querySelectorAll('.dynamic-text').forEach(el => {
+      const baseSize = parseFloat(el.getAttribute('data-base-size') || 10);
+      const baseY = parseFloat(el.getAttribute('data-base-y') || 0);
+      
+      let adjustedY = baseY;
+      if (el.classList.contains('face-name') && !showArea) {
+         adjustedY = 0; 
+      }
+
+      el.setAttribute('font-size', baseSize * fontMult);
+      el.setAttribute('y', adjustedY * fontMult);
+
+      if (el.classList.contains('text-outline')) {
+         const baseStroke = parseFloat(el.getAttribute('data-base-stroke'));
+         if (!isNaN(baseStroke)) {
+            el.setAttribute('stroke-width', baseStroke * fontMult);
+         }
+      }
+    });
+
+    document.querySelectorAll('.edge-text-group').forEach(group => {
+      const cx = parseFloat(group.getAttribute('data-cx'));
+      const cy = parseFloat(group.getAttribute('data-cy'));
+      const nx = parseFloat(group.getAttribute('data-nx'));
+      const ny = parseFloat(group.getAttribute('data-ny'));
+      const angle = parseFloat(group.getAttribute('data-angle'));
+      
+      const offsetX = nx * edgeOffset;
+      const offsetY = ny * edgeOffset;
+      
+      group.setAttribute('transform', \`translate(\${cx + offsetX}, \${cy + offsetY}) rotate(\${angle})\`);
+    });
+  }
+
+  function updateScrollSpacer() {
+    const page = document.querySelector('.page');
+    const spacer = document.getElementById('scroll-spacer');
+    const panel = document.getElementById('control-panel');
+    if (page && spacer && panel) {
+      const panelHeight = panel.offsetHeight;
+      const scaledHeight = page.offsetHeight * pageScale;
+      const availHeight = window.innerHeight - panelHeight;
+      const requiredHeight = scaledHeight + 48; // 余白48px(上下24px)
+      
+      spacer.style.height = Math.max(availHeight, requiredHeight) + 'px';
+    }
+  }
+
+  function updatePageStyle() {
+    const size = document.getElementById('setting-size').value;
+    const orientation = document.getElementById('setting-orientation').value;
+    
+    let w, h;
+    if (size === 'A1') {
+      w = orientation === 'landscape' ? '841mm' : '594mm';
+      h = orientation === 'landscape' ? '594mm' : '841mm';
+    } else if (size === 'A3') {
+      w = orientation === 'landscape' ? '420mm' : '297mm';
+      h = orientation === 'landscape' ? '297mm' : '420mm';
+    } else {
+      w = orientation === 'landscape' ? '297mm' : '210mm';
+      h = orientation === 'landscape' ? '210mm' : '297mm';
+    }
+    
+    const pageEl = document.querySelector('.page');
+    if (pageEl) {
+      pageEl.style.width = w;
+      pageEl.style.height = h;
+    }
+    
+    const styleEl = document.getElementById('dynamic-page-style');
+    if (styleEl) {
+      styleEl.textContent = \`@page { size: \${size} \${orientation}; margin: 0; }\`;
+    }
+    fitToScreen();
+    setTimeout(updateScale, 10);
+  }
+
+  function updateScale() {
+    const scaleValue = document.getElementById('setting-scale').value;
+    const drawingEl = document.getElementById('drawing');
+    const svgEl = drawingEl.querySelector('svg');
+    const scaleLabelContainer = document.getElementById('scale-label-container');
+    const pageEl = document.querySelector('.page');
+    
+    if (scaleValue === 'auto') {
+      drawingEl.style.overflow = 'hidden';
+      svgEl.style.width = '100%';
+      svgEl.style.height = '100%';
+      svgEl.style.maxWidth = '100%';
+      svgEl.style.maxHeight = '100%';
+      svgEl.style.flexShrink = '1';
+      
+      if (pageEl) {
+        drawingEl.style.width = (pageEl.offsetWidth * 0.6) + 'px';
+        drawingEl.style.height = (pageEl.offsetHeight * 0.8) + 'px';
+      } else {
+        drawingEl.style.width = '60%';
+        drawingEl.style.height = '80%';
+      }
+      
+      if (scaleLabelContainer) scaleLabelContainer.style.display = 'none';
+    } else {
+      drawingEl.style.overflow = 'visible';
+      const numScale = parseInt(scaleValue, 10);
+      if (pxPerMeter > 0) {
+        const mmPerPx = (1000 / numScale) / pxPerMeter;
+        const newW = \`\${svgVbW * mmPerPx}mm\`;
+        const newH = \`\${svgVbH * mmPerPx}mm\`;
+        svgEl.style.width = newW;
+        svgEl.style.height = newH;
+        svgEl.style.maxWidth = 'none';
+        svgEl.style.maxHeight = 'none';
+        svgEl.style.flexShrink = '0';
+        drawingEl.style.width = newW;
+        drawingEl.style.height = newH;
+      }
+      if (scaleLabelContainer) {
+        scaleLabelContainer.style.display = 'block';
+        scaleLabelContainer.innerText = \`縮尺: 1/\${scaleValue}\`;
+      }
+    }
+    updateScrollSpacer();
+  }
+
+  function renderTables() {
+    const limitInput = document.getElementById('setting-table-rows');
+    let limit = parseInt(limitInput.value, 10);
+    if (isNaN(limit) || limit < 1) limit = 50;
+
+    document.querySelectorAll('.table-container').forEach(el => el.remove());
+    
+    const pageEl = document.querySelector('.page');
+    let tableIndex = 0;
+    
+    rawTableData.forEach(type => {
+      const combinedFaces = type.faces;
+      const chunks = [];
+      for (let i = 0; i < combinedFaces.length; i += limit) {
+        chunks.push(combinedFaces.slice(i, i + limit));
+      }
+      
+      const deductCount = combinedFaces.filter(f => f.isDeduct).length;
+      
+      chunks.forEach((chunk, chunkIdx) => {
+        let singleTableHTML = \`<div class="title">\${type.name} 計算書\${chunks.length > 1 ? \` (\${chunkIdx + 1}/\${chunks.length})\` : ''}</div><table><tr><th colspan="5" style="text-align:left; background-color:\${type.color}30;">\${type.name}\${deductCount > 0 ? ' (控除含む)' : ''}</th></tr><tr><th width="20%">番号</th><th width="20%">辺a (m)</th><th width="20%">辺b (m)</th><th width="20%">辺c (m)</th><th width="20%">面積(㎡)</th></tr>\`;
+        
+        chunk.forEach(f => {
+          const faceAreaStr = f.isDeduct ? \`-\${f.area.toFixed(fractionDigits)}\` : f.area.toFixed(fractionDigits);
+          singleTableHTML += \`<tr><td>\${f.displayName}</td><td>\${f.edges[0].toFixed(fractionDigits)}</td><td>\${f.edges[1].toFixed(fractionDigits)}</td><td>\${f.edges[2].toFixed(fractionDigits)}</td><td style="color:\${f.isDeduct ? '#e11d48' : 'inherit'};">\${faceAreaStr}</td></tr>\`;
+        });
+        
+        if (chunkIdx === chunks.length - 1) {
+          if (deductCount > 0) {
+            singleTableHTML += \`<tr><td colspan="4" style="text-align:right; background-color:#f8fafc;">小計</td><td style="background-color:#f8fafc;">\${type.parentTotal.toFixed(fractionDigits)}</td></tr>\`;
+            singleTableHTML += \`<tr><td colspan="4" style="text-align:right; background-color:#fef2f2; color:#e11d48;">控除合計</td><td style="background-color:#fef2f2; color:#e11d48;">-\${type.deductTotal.toFixed(fractionDigits)}</td></tr>\`;
+          }
+          singleTableHTML += \`<tr><td colspan="4" style="text-align:right; font-weight:bold; background-color:#f1f5f9;">\${deductCount > 0 ? '差引合計' : '合計'}</td><td style="font-weight:bold; background-color:#f1f5f9;">\${type.netTotal.toFixed(fractionDigits)}</td></tr>\`;
+        }
+        singleTableHTML += \`</table>\`;
+        
+        const div = document.createElement('div');
+        div.className = 'draggable table-container';
+        div.id = \`table-\${type.id}-\${chunkIdx}\`;
+        div.style.top = (40 + tableIndex * 30) + 'px';
+        div.style.right = (40 - tableIndex * 30) + 'px';
+        div.style.zIndex = 10;
+        div.innerHTML = singleTableHTML + \`<div class="resize-handle no-print"></div>\`;
+        
+        pageEl.appendChild(div);
+        setupWheelForElement(div, currentBaseTableWidth, currentBaseTableFontSize);
+        tableIndex++;
+      });
+    });
+    
+    const totalDiv = document.createElement('div');
+    totalDiv.className = 'draggable table-container';
+    totalDiv.id = 'table-total';
+    totalDiv.style.top = (40 + tableIndex * 30) + 'px';
+    totalDiv.style.right = (40 - tableIndex * 30) + 'px';
+    totalDiv.style.zIndex = 10;
+    totalDiv.innerHTML = \`<div class="title">総面積</div><table style="border:2px solid #333;"><tr><td width="80%" style="text-align:right; font-weight:bold; background-color:#f1f5f9;">総面積</td><td width="20%" style="font-weight:bold; background-color:#f1f5f9; text-align:center;">\${totalArea.toFixed(fractionDigits)} ㎡</td></tr></table><div class="resize-handle no-print"></div>\`;
+    pageEl.appendChild(totalDiv);
+    setupWheelForElement(totalDiv, currentBaseTableWidth, currentBaseTableFontSize);
+  }
+
+  function changePageScale(delta, clientX, clientY) {
+    const oldScale = pageScale;
+    pageScale = Math.max(0.1, Math.min(3.0, pageScale + delta));
+    const ratio = pageScale / oldScale;
+    const wrapper = document.getElementById('page-wrapper');
+    const panel = document.getElementById('control-panel');
+    
+    if (panel) document.body.style.paddingTop = panel.offsetHeight + 'px';
+    
+    if (clientX !== undefined && clientY !== undefined) {
+      const rect = wrapper.getBoundingClientRect();
+      const newWidth = rect.width * ratio;
+      const newLeft = rect.left - (newWidth - rect.width) / 2;
+      const newTop = rect.top;
+      
+      const relX = clientX - rect.left;
+      const relY = clientY - rect.top;
+      
+      const newClientX = newLeft + relX * ratio;
+      const newClientY = newTop + relY * ratio;
+      
+      const diffX = newClientX - clientX;
+      const diffY = newClientY - clientY;
+      
+      wrapper.style.transform = 'scale(' + pageScale + ')';
+      document.getElementById('scale-display').innerText = Math.round(pageScale * 100) + '%';
+      
+      updateScrollSpacer();
+      window.scrollTo(0, 0);
+    } else {
+      wrapper.style.transform = 'scale(' + pageScale + ')';
+      document.getElementById('scale-display').innerText = Math.round(pageScale * 100) + '%';
+      updateScrollSpacer();
+    }
+  }
+
+  function fitToScreen() {
+    const page = document.querySelector('.page');
+    const panel = document.getElementById('control-panel');
+    if (page && panel) {
+      const panelHeight = panel.offsetHeight;
+      document.body.style.paddingTop = panelHeight + 'px'; 
+      
+      const availWidth = window.innerWidth;
+      const availHeight = window.innerHeight - panelHeight; 
+      
+      // 上下左右に24pxずつの余白(計48px)を確保
+      const fitScale = Math.min((availWidth - 48) / page.offsetWidth, (availHeight - 48) / page.offsetHeight); 
+      pageScale = Math.max(0.1, Math.min(2.0, fitScale));
+      
+      document.getElementById('scale-display').innerText = Math.round(pageScale * 100) + '%';
+      document.getElementById('page-wrapper').style.transform = 'scale(' + pageScale + ')';
+      
+      updateScrollSpacer();
+      window.scrollTo(0, 0);
+    }
+  }
+
+  function initLayout() {
+    const panel = document.getElementById('control-panel');
+    if (panel) document.body.style.paddingTop = panel.offsetHeight + 'px';
+    fitToScreen();
+  }
+
+  function saveAsHTML() { 
+    document.querySelectorAll('select, input').forEach(el => {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+            if (el.checked) el.setAttribute('checked', 'checked');
+            else el.removeAttribute('checked');
+        } else {
+            el.setAttribute('value', el.value);
+            if (el.tagName.toLowerCase() === 'select') {
+               Array.from(el.options).forEach(opt => {
+                   if (opt.value === el.value) opt.setAttribute('selected', 'selected');
+                   else opt.removeAttribute('selected');
+               });
+            }
+        }
+    });
+
+    const filenameInput = document.getElementById('setting-filename');
+    let filename = filenameInput ? filenameInput.value : '展開図レイアウト.html';
+    if (!filename.endsWith('.html')) filename += '.html';
+
+    const htmlContent = "<!DOCTYPE html>\\n<html lang=\\"ja\\">\\n" + document.documentElement.innerHTML + "\\n</html>"; 
+    const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' }); 
+    const url = URL.createObjectURL(blob); 
+    const a = document.createElement('a'); 
+    a.href = url; 
+    a.download = filename; 
+    document.body.appendChild(a); 
+    a.click(); 
+    document.body.removeChild(a); 
+    URL.revokeObjectURL(url); 
+  }
+  
+  let activeDrag = null, activeResize = null, startX, startY, initX, initY, initW, initH;
+  let currentZIndex = 20;
+  let activeSvgDrag = null, svgStartX, svgStartY, initialTx = 0, initialTy = 0;
+
+  document.addEventListener('pointerdown', (e) => {
+    const svgDraggable = e.target.closest('.svg-draggable');
+    if (svgDraggable) {
+        e.stopPropagation(); 
+        activeSvgDrag = svgDraggable;
+        svgStartX = e.clientX;
+        svgStartY = e.clientY;
+        const transform = svgDraggable.getAttribute('transform');
+        const match = transform ? transform.match(/translate\\(([^,]+),\\s*([^)]+)\\)/) : null;
+        if (match) {
+          initialTx = parseFloat(match[1]);
+          initialTy = parseFloat(match[2]);
+        } else {
+          initialTx = 0; initialTy = 0;
+        }
+        if(svgDraggable.parentNode) {
+          svgDraggable.parentNode.appendChild(svgDraggable);
+        }
+        return;
+    }
+
+    const draggable = e.target.closest('.draggable');
+    if (draggable) {
+        if (e.target.classList.contains('resize-handle')) activeResize = draggable; 
+        else activeDrag = draggable; 
+        
+        startX = e.pageX; startY = e.pageY; 
+        initX = draggable.offsetLeft; initY = draggable.offsetTop; 
+        initW = draggable.offsetWidth; initH = draggable.offsetHeight; 
+        
+        if (!draggable.classList.contains('drawing')) {
+          currentZIndex++;
+          draggable.style.zIndex = currentZIndex; 
+        }
+        draggable.style.right = 'auto'; draggable.style.bottom = 'auto'; 
+        draggable.style.left = initX + 'px'; draggable.style.top = initY + 'px';
+    }
+  });
+
+  document.addEventListener('pointermove', (e) => { 
+    if (activeDrag) { 
+      activeDrag.style.left = (initX + (e.pageX - startX) / pageScale) + 'px'; 
+      activeDrag.style.top = (initY + (e.pageY - startY) / pageScale) + 'px'; 
+    } 
+    else if (activeResize) { 
+      activeResize.style.width = Math.max(50, initW + (e.pageX - startX) / pageScale) + 'px'; 
+      activeResize.style.height = Math.max(50, initH + (e.pageY - startY) / pageScale) + 'px'; 
+    }
+    else if (activeSvgDrag) {
+      const svgEl = document.querySelector('svg');
+      if (svgEl) {
+          const pt1 = svgEl.createSVGPoint();
+          const pt2 = svgEl.createSVGPoint();
+          pt1.x = svgStartX; pt1.y = svgStartY;
+          pt2.x = e.clientX; pt2.y = e.clientY;
+          
+          const ctm = svgEl.getScreenCTM().inverse();
+          const svgPt1 = pt1.matrixTransform(ctm);
+          const svgPt2 = pt2.matrixTransform(ctm);
+          
+          const dx = svgPt2.x - svgPt1.x;
+          const dy = svgPt2.y - svgPt1.y;
+          
+          activeSvgDrag.setAttribute('transform', \`translate(\${initialTx + dx}, \${initialTy + dy})\`);
+      }
+    }
+  }); 
+
+  document.addEventListener('pointerup', () => { activeDrag = null; activeResize = null; activeSvgDrag = null; });
+  document.addEventListener('pointercancel', () => { activeDrag = null; activeResize = null; activeSvgDrag = null; });
+  
+  function setupWheelForElement(container, baseW, baseFS) {
+      if (!container) return;
+      if (container._wheelSetup) return; // 二重登録防止
+      container._wheelSetup = true;
+      
+      let currentW = parseFloat(container.style.width);
+      let currentFS = parseFloat(container.style.fontSize);
+      let cw = !isNaN(currentW) ? currentW : baseW; 
+      let cfs = !isNaN(currentFS) ? currentFS : baseFS; 
+      
+      if (cw !== null) container.style.width = cw + 'px'; 
+      if (cfs !== null) container.style.fontSize = cfs + 'px'; 
+      
+      container.addEventListener('wheel', (e) => { 
+        if (e.ctrlKey || e.metaKey) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const f = e.deltaY > 0 ? 0.9 : 1.1; 
+        
+        const rect = container.getBoundingClientRect();
+        const ratioX = (e.clientX - rect.left) / rect.width;
+        const ratioY = (e.clientY - rect.top) / rect.height;
+        const oldW = container.offsetWidth;
+        const oldH = container.offsetHeight;
+
+        if (cw !== null) { cw = Math.max(50, cw * f); container.style.width = cw + 'px'; } 
+        if (cfs !== null) { cfs = Math.max(4, cfs * f); container.style.fontSize = cfs + 'px'; } 
+
+        const newW = container.offsetWidth;
+        const newH = container.offsetHeight;
+        let currentLeft = parseFloat(container.style.left);
+        let currentTop = parseFloat(container.style.top);
+        if (isNaN(currentLeft) || !container.style.left.endsWith('px')) { currentLeft = container.offsetLeft; container.style.right = 'auto'; }
+        if (isNaN(currentTop) || !container.style.top.endsWith('px')) { currentTop = container.offsetTop; container.style.bottom = 'auto'; }
+
+        container.style.left = (currentLeft - (newW - oldW) * ratioX) + 'px';
+        container.style.top = (currentTop - (newH - oldH) * ratioY) + 'px';
+      }, { passive: false }); 
+  }
+
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey || e.metaKey) return;
+    if (e.target.closest('#control-panel')) return;
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.05 : 0.05;
+    changePageScale(delta, e.clientX, e.clientY);
+  }, { passive: false });
+
+  // 構造とスタイルの初期化
+  updatePageStyle();
+  updateScale();
+  renderTables();
+  
+  setupWheelForElement(document.querySelector('.attributes-container'), 300, ${baseFontSize}); 
+  setupWheelForElement(document.getElementById('scale-label-container'), null, ${baseFontSize * 1.2}); 
+  setupWheelForElement(document.querySelector('.title-container'), null, ${baseFontSize * 2.5});
+  
+  const drawingContainer = document.getElementById('drawing'); 
+  if (drawingContainer) {
+    const scaleOptions = ['auto', '50', '100', '200', '250', '500', '1000'];
+    drawingContainer.addEventListener('wheel', (e) => {
+      if (e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      e.stopPropagation(); // 背景のズームに伝播させない
+
+      const scaleSelect = document.getElementById('setting-scale');
+      const scaleValue = scaleSelect.value;
+      
+      if (scaleValue === 'auto') {
+        // 「自動」の時は自由に拡大・縮小する
+        const f = e.deltaY > 0 ? 0.9 : 1.1; 
+        
+        const rect = drawingContainer.getBoundingClientRect();
+        const ratioX = (e.clientX - rect.left) / rect.width;
+        const ratioY = (e.clientY - rect.top) / rect.height;
+        const oldW = drawingContainer.offsetWidth;
+        const oldH = drawingContainer.offsetHeight;
+
+        let cw = parseFloat(drawingContainer.style.width) || drawingContainer.offsetWidth;
+        let ch = parseFloat(drawingContainer.style.height) || drawingContainer.offsetHeight;
+
+        cw = Math.max(100, cw * f); 
+        ch = Math.max(100, ch * f); 
+
+        drawingContainer.style.width = cw + 'px';
+        drawingContainer.style.height = ch + 'px';
+
+        const newW = drawingContainer.offsetWidth;
+        const newH = drawingContainer.offsetHeight;
+        let currentLeft = parseFloat(drawingContainer.style.left);
+        let currentTop = parseFloat(drawingContainer.style.top);
+        if (isNaN(currentLeft) || !drawingContainer.style.left.endsWith('px')) { currentLeft = drawingContainer.offsetLeft; drawingContainer.style.right = 'auto'; }
+        if (isNaN(currentTop) || !container.style.top.endsWith('px')) { currentTop = container.offsetTop; drawingContainer.style.bottom = 'auto'; }
+
+        drawingContainer.style.left = (currentLeft - (newW - oldW) * ratioX) + 'px';
+        drawingContainer.style.top = (currentTop - (newH - oldH) * ratioY) + 'px';
+        
+      } else {
+        // 「指定」の時は段階的に縮尺を切り替える
+        const currentIndex = scaleOptions.indexOf(scaleValue);
+        
+        if (e.deltaY > 0) {
+          // 下スクロール（縮小したい）
+          if (currentIndex < scaleOptions.length - 1) {
+            scaleSelect.value = scaleOptions[currentIndex + 1];
+            updateScale();
+          }
+        } else {
+          // 上スクロール（拡大したい）
+          if (currentIndex > 1) {
+            scaleSelect.value = scaleOptions[currentIndex - 1];
+            updateScale();
+          }
+        }
+      }
+    }, { passive: false });
+  }
+
+  // 最後に初期レイアウト調整を実行
+  setTimeout(initLayout, 50);
+
+<\/script></body></html>`;
+
+  try {
+    const win = window.open('', '_blank');
+    if (win) { win.document.write(html); win.document.close(); } else { console.warn("ポップアップがブロックされました。ブラウザの設定をご確認ください。"); }
+  } catch (err) {
+    console.error("Preview failed:", err);
+    console.warn("プレビューの表示に失敗しました。");
+  }
+};
+
+// ==========================================
+// 6. Shared Handlers & Modals
+// ==========================================
+const createHoverProps = (id, type, isDragging, setHoveredTarget) => ({
+  onPointerEnter: () => !isDragging && setHoveredTarget({ id, type }),
+  onPointerLeave: () => !isDragging && setHoveredTarget(p => (p.id === id && p.type === type) ? { id: null, type: null } : p)
+});
+
+const Toolbar = ({ currentMode, setCurrentMode, onUndo, onRedo, canUndo, canRedo, onDelete, canDelete, onClearClick, onFitToView, onPrintClick, onExport, onImport, fileInputRef, cancelDraw }) => (
+  <div className="w-16 bg-white border-r border-slate-200 flex flex-col items-center py-4 gap-2 z-10 shadow-sm shrink-0 overflow-y-auto">
+    <button onClick={() => { setCurrentMode('select'); cancelDraw(); }} className={`p-2.5 rounded-xl transition-colors ${currentMode === 'select' ? 'bg-blue-100 text-blue-600' : 'text-slate-500 hover:bg-slate-100'}`} title="選択・移動・回転モード"><IconMousePointer2 size={24} /></button>
+    <div className="h-px w-8 bg-slate-200 my-0.5"></div>
+    <button onClick={() => { setCurrentMode('polygon'); cancelDraw(); }} className={`p-2.5 rounded-xl transition-colors ${currentMode === 'polygon' ? 'bg-blue-100 text-blue-600' : 'text-slate-500 hover:bg-slate-100'}`} title="作図（ポリゴン）モード"><IconTriangle size={24} /></button>
+    <button onClick={() => { setCurrentMode('line'); cancelDraw(); }} className={`p-2.5 rounded-xl transition-colors ${currentMode === 'line' ? 'bg-blue-100 text-blue-600' : 'text-slate-500 hover:bg-slate-100'}`} title="補助線モード（直線）"><IconMinus size={24} /></button>
+    <button onClick={() => { setCurrentMode('curve'); cancelDraw(); }} className={`p-2.5 rounded-xl transition-colors ${currentMode === 'curve' ? 'bg-blue-100 text-blue-600' : 'text-slate-500 hover:bg-slate-100'}`} title="補助線モード（曲線）"><WaveIcon size={24} /></button>
+    <button onClick={() => { setCurrentMode('text'); cancelDraw(); }} className={`p-2.5 rounded-xl transition-colors ${currentMode === 'text' ? 'bg-blue-100 text-blue-600' : 'text-slate-500 hover:bg-slate-100'}`} title="テキストモード"><IconType size={24} /></button>
+    <div className="h-px w-8 bg-slate-200 my-0.5"></div>
+    <button onClick={onUndo} disabled={!canUndo} className={`p-2.5 rounded-xl transition-colors ${canUndo ? 'text-slate-600 hover:bg-slate-100' : 'text-slate-300 cursor-not-allowed'}`} title="元に戻す (Ctrl+Z)"><IconUndo2 size={24} /></button>
+    <button onClick={onRedo} disabled={!canRedo} className={`p-2.5 rounded-xl transition-colors ${canRedo ? 'text-slate-600 hover:bg-slate-100' : 'text-slate-300 cursor-not-allowed'}`} title="やり直し (Ctrl+Y)"><IconRedo2 size={24} /></button>
+    <button onClick={onDelete} disabled={!canDelete} className={`p-2.5 rounded-xl transition-colors ${canDelete ? 'text-red-600 hover:bg-red-100' : 'text-slate-300 cursor-not-allowed'}`} title="選択した要素を削除 (Delete / Backspace)"><IconEraser size={24} /></button>
+    <button onClick={onClearClick} className="p-2.5 rounded-xl text-red-500 hover:bg-red-100 transition-colors" title="すべてクリア"><IconTrash2 size={24} /></button>
+    <div className="h-px w-8 bg-slate-200 my-0.5"></div>
+    <button onClick={onFitToView} className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors" title="全体を表示"><IconMaximize size={24} /></button>
+    <button onClick={onPrintClick} className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors" title="印刷・HTML出力"><IconPrinter size={24} /></button>
+    <button onClick={onExport} className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors" title="保存 (JSON)"><IconDownload size={24} /></button>
+    <button onClick={() => fileInputRef.current?.click()} className="p-2.5 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors" title="読み込み (JSON)"><IconUpload size={24} /></button>
+    <input type="file" ref={fileInputRef} onChange={onImport} accept=".json" className="hidden" />
+  </div>
+);
+
+const LengthModal = ({ info, defaultApply, onClose, onConfirm }) => {
+  const [value, setValue] = useState(info.initialValue);
+  const inputRef = useRef(null);
+  useEffect(() => { if (info.isOpen) { setValue(info.initialValue); setTimeout(() => { if (inputRef.current) { inputRef.current.focus(); inputRef.current.select(); } }, 10); } }, [info.isOpen, info.initialValue, info.edgeId]);
+  if (!info.isOpen) return null;
+  return (
+    <div className="fixed z-50 bg-white p-2.5 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.15)] border border-slate-200 animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-1.5" style={{ left: info.x, top: info.y, transform: 'translate(-50%, -100%)', marginTop: '-16px' }} onPointerDown={(e) => e.stopPropagation()}>
+      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-slate-200 rotate-45"></div>
+      <div className="flex justify-between items-center px-1"><h3 className="font-bold text-slate-700 text-[10px]">辺の長さを入力</h3></div>
+      <div className="flex items-center gap-1.5 px-1">
+        <input ref={inputRef} type="number" step="0.1" value={value} onChange={e => setValue(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { const apply = e.shiftKey ? !defaultApply : defaultApply; onConfirm(info.edgeId, value, apply); } if (e.key === 'Escape') onClose(); }} className="w-full pl-2 py-1.5 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm font-medium transition-colors" placeholder="0.00" />
+        <span className="text-slate-500 font-medium text-xs">m</span>
+      </div>
+      <div className="flex justify-between items-center mt-1 gap-1">
+        <button onClick={onClose} className="px-2 py-1.5 text-slate-500 hover:bg-slate-100 rounded transition-colors text-[10px] font-medium shrink-0">閉じる</button>
+        <div className="flex gap-1.5">
+          <button onClick={() => onConfirm(info.edgeId, value, false)} className={`px-2.5 py-1.5 rounded transition-colors text-[10px] font-medium shadow-sm whitespace-nowrap ${!defaultApply ? 'bg-blue-600 hover:bg-blue-700 text-white border border-blue-600' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'}`} title={`数値だけを更新 (${!defaultApply ? 'Enter' : 'Shift+Enter'})`}>数値のみ確定</button>
+          <button onClick={() => onConfirm(info.edgeId, value, true)} className={`px-2.5 py-1.5 rounded transition-colors text-[10px] font-medium shadow-sm whitespace-nowrap ${defaultApply ? 'bg-blue-600 hover:bg-blue-700 text-white border border-blue-600' : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200'}`} title={`図形の長さを伸縮させる (${defaultApply ? 'Enter' : 'Shift+Enter'})`}>図形に反映して確定</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const TextModal = ({ info, onClose, onConfirm }) => {
+  const [value, setValue] = useState(info.initialText);
+  const inputRef = useRef(null);
+  useEffect(() => { if (info.isOpen) { setValue(info.initialText); setTimeout(() => { if (inputRef.current) { inputRef.current.focus(); inputRef.current.select(); } }, 10); } }, [info.isOpen, info.initialText, info.textId]);
+  if (!info.isOpen) return null;
+  return (
+    <div className="fixed z-50 bg-white p-2.5 rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.15)] border border-slate-200 animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-1.5" style={{ left: info.x, top: info.y, transform: 'translate(-50%, -100%)', marginTop: '-16px' }} onPointerDown={(e) => e.stopPropagation()}>
+      <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-b border-r border-slate-200 rotate-45"></div>
+      <h3 className="font-bold text-slate-700 text-[10px] px-1">テキストを入力</h3>
+      <div className="flex items-center gap-1.5 px-1">
+        <input ref={inputRef} type="text" value={value} onChange={e => setValue(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') onConfirm(info.textId, value, info.logicalX, info.logicalY); if (e.key === 'Escape') onClose(); }} className="w-48 pl-2 py-1.5 border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm font-medium transition-colors" placeholder="文字を入力..." />
+      </div>
+      <div className="flex justify-between items-center mt-1 gap-1">
+        <button onClick={onClose} className="px-2 py-1.5 text-slate-500 hover:bg-slate-100 rounded transition-colors text-[10px] font-medium shrink-0">閉じる</button>
+        <button onClick={() => onConfirm(info.textId, value, info.logicalX, info.logicalY)} className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors text-[10px] font-medium shadow-sm whitespace-nowrap">確定 (Enter)</button>
+      </div>
+    </div>
+  );
+};
+
+const FaceModal = ({ info, slopeTypes, faceTypes, faceDeductions, onClose, onSelect, onAdd, onToggleDeduction }) => {
+  const [isAddingNew, setIsAddingNew] = useState(false);
+  const [newTypeName, setNewTypeName] = useState('');
+  useEffect(() => { if (info.isOpen) { setIsAddingNew(false); setNewTypeName(''); } }, [info.isOpen, info.faceId]);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (info.isOpen && e.key === 'Enter' && !isAddingNew) {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [info.isOpen, isAddingNew, onClose]);
+
+  if (!info.isOpen) return null;
+  return (
+    <div className="face-modal-content fixed z-50 bg-white p-2 rounded-lg shadow-[0_4px_20px_-4px_rgba(0,0,0,0.15)] border border-slate-200 animate-in fade-in zoom-in-95 duration-200 flex flex-col gap-1.5" style={{ left: info.x, top: info.y, transform: 'translate(-50%, -100%)', marginTop: '-12px' }} onPointerDown={(e) => e.stopPropagation()}>
+      <div className="absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white border-b border-r border-slate-200 rotate-45"></div>
+      <h3 className="font-bold text-slate-700 text-[10px] text-center w-full">工種</h3>
+      {!isAddingNew ? (
+        <>
+          <div className="flex flex-col gap-1 mt-0.5 w-36 max-h-40 overflow-y-auto pr-1">
+            {slopeTypes.map(type => { const isSelected = (faceTypes[info.faceId] || 't1') === type.id; return (<button key={type.id} onClick={() => onSelect(info.faceId, type.id)} className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-xs text-left transition-colors font-medium border ${isSelected ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'}`}><div className="w-3 h-3 rounded-full border border-slate-300 shadow-sm shrink-0" style={{ backgroundColor: type.color }}></div><span className="truncate">{type.name}</span></button>); })}
+          </div>
+          <div className="border-t border-slate-200 mt-1 pt-1.5">
+            <label className="flex items-center gap-2 cursor-pointer px-1 py-0.5 hover:bg-slate-50 rounded transition-colors">
+              <input type="checkbox" checked={!!faceDeductions[info.faceId]} onChange={e => onToggleDeduction(info.faceId, e.target.checked)} className="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer" />
+              <span className="text-[10px] text-slate-600 font-medium select-none">控除（マイナス）として扱う</span>
+            </label>
+          </div>
+          <div className="flex justify-between items-center gap-1 mt-0.5">
+            <button onClick={onClose} className="px-2 py-1 text-slate-500 hover:bg-slate-100 rounded transition-colors text-[10px] font-medium">閉じる</button>
+            <button onClick={() => setIsAddingNew(true)} className="flex-1 py-1 text-[10px] font-medium text-blue-600 hover:bg-blue-50 rounded transition-colors text-right pr-1">+ 新規追加</button>
+          </div>
+        </>
+      ) : (
+        <div className="flex flex-col gap-1.5 mt-0.5 w-36">
+          <input autoFocus type="text" value={newTypeName} onChange={e => setNewTypeName(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { if(newTypeName.trim() !== '') { onAdd(info.faceId, newTypeName.trim()); setIsAddingNew(false); } } if (e.key === 'Escape') setIsAddingNew(false); }} placeholder="種類名を入力" className="w-full px-2 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:border-blue-500" />
+          <div className="flex justify-end gap-1 mt-0.5">
+            <button onClick={() => setIsAddingNew(false)} className="px-2 py-1 text-slate-500 hover:bg-slate-100 rounded transition-colors text-[10px] font-medium">戻る</button>
+            <button disabled={newTypeName.trim() === ''} onClick={() => { onAdd(info.faceId, newTypeName.trim()); setIsAddingNew(false); }} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white rounded transition-colors text-[10px] font-medium shadow-sm">確定</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const PrintModal = ({ isOpen, onClose, onPrint }) => {
+  const [size, setSize] = useState('A4'); 
+  const [orientation, setOrientation] = useState('landscape'); 
+  const [colorMode, setColorMode] = useState('color'); 
+  const [tableRowsLimit, setTableRowsLimit] = useState(50); 
+  const [scale, setScale] = useState('auto'); 
+  const [showAreaInPolygon, setShowAreaInPolygon] = useState(false);
+  const [fontSizeMultiplier, setFontSizeMultiplier] = useState(1.0);
+  const [edgeTextOffset, setEdgeTextOffset] = useState(6); 
+
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" onPointerDown={onClose}>
+      <div className="bg-white rounded-xl shadow-xl p-6 w-80 max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200" onPointerDown={e => e.stopPropagation()}>
+        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><IconPrinter size={20} className="text-blue-500" />印刷・HTML出力</h3>
+        <div className="space-y-3 mb-6">
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">用紙サイズ</label><select value={size} onChange={e => setSize(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"><option value="A4">A4サイズ</option><option value="A3">A3サイズ</option><option value="A1">A1サイズ (大判)</option></select></div>
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">向き</label><select value={orientation} onChange={e => setOrientation(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"><option value="landscape">横向き (図と表を左右に配置)</option><option value="portrait">縦向き (図と表を上下に配置)</option></select></div>
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">縮尺 (図面の大きさ)</label><select value={scale} onChange={e => setScale(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"><option value="auto">自動 (枠に合わせて最大化)</option><option value="50">1/50</option><option value="100">1/100</option><option value="200">1/200</option><option value="250">1/250</option><option value="500">1/500</option><option value="1000">1/1000</option></select>{scale !== 'auto' && <p className="text-[10px] text-slate-400 mt-1">※全体の平均値から正確な縮尺を逆算して描画します。</p>}</div>
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">図形内の面積表示</label><label className="flex items-center gap-2 text-sm cursor-pointer"><input type="checkbox" checked={showAreaInPolygon} onChange={e => setShowAreaInPolygon(e.target.checked)} className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" /><span className="text-slate-700">図形の中に面積を表示</span></label></div>
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">文字の大きさ (倍率)</label><input type="number" min="0.5" max="5.0" step="0.1" value={fontSizeMultiplier} onChange={e => setFontSizeMultiplier(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm" /></div>
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">辺の寸法文字の距離</label><input type="number" min="0" max="100" step="1" value={edgeTextOffset} onChange={e => setEdgeTextOffset(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm" /></div>
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">カラー設定</label><select value={colorMode} onChange={e => setColorMode(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm"><option value="color">カラー (画面の見た目まま)</option><option value="bw">白黒線画 (図面提出用)</option></select></div>
+          <div><label className="block text-xs font-semibold text-slate-500 mb-1">表の折り返し（分割）行数</label><input type="number" min="1" max="1000" value={tableRowsLimit} onChange={e => setTableRowsLimit(Number(e.target.value))} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm" /></div>
+        </div>
+        <div className="flex justify-end gap-2"><button onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">キャンセル</button><button onClick={() => onPrint({ size, orientation, colorMode, tableRowsLimit, scale, showAreaInPolygon, fontSizeMultiplier, edgeTextOffset })} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm">プレビューを開く</button></div>
+      </div>
+    </div>
+  );
+};
+
+const ExportModal = ({ isOpen, onClose, onConfirm }) => {
+  const [fileName, setFileName] = useState('');
+  useEffect(() => { if (isOpen) { const now = new Date(); const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`; setFileName(`${dateStr}_展開図.json`); } }, [isOpen]);
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" onPointerDown={onClose}>
+      <div className="bg-white rounded-xl shadow-xl p-6 w-80 animate-in fade-in zoom-in-95 duration-200" onPointerDown={e => e.stopPropagation()}>
+        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><IconDownload size={20} className="text-blue-500" />ファイルを保存</h3>
+        <div className="space-y-4 mb-6"><div><label className="block text-xs font-semibold text-slate-500 mb-1">ファイル名</label><input autoFocus type="text" value={fileName} onChange={e => setFileName(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') onConfirm(fileName); if (e.key === 'Escape') onClose(); }} className="w-full px-3 py-2 border border-slate-300 rounded focus:ring-2 focus:ring-blue-500 text-sm" /></div></div>
+        <div className="flex justify-end gap-2"><button onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">キャンセル</button><button onClick={() => onConfirm(fileName)} className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors shadow-sm">保存</button></div>
+      </div>
+    </div>
+  );
+};
+
+const ClearModal = ({ isOpen, onClose, onConfirm }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm" onPointerDown={onClose}>
+      <div className="bg-white rounded-xl shadow-xl p-6 w-80 animate-in fade-in zoom-in-95 duration-200" onPointerDown={e => e.stopPropagation()}>
+        <h3 className="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2"><IconTrash2 size={20} className="text-red-500" />すべてクリア</h3>
+        <p className="text-sm text-slate-600 mb-6">キャンバス上のすべての図形やテキストを消去します。この操作は元に戻せますが、よろしいですか？</p>
+        <div className="flex justify-end gap-2"><button onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors">キャンセル</button><button onClick={onConfirm} className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors shadow-sm">クリアする</button></div>
+      </div>
+    </div>
+  );
+};
+
+const PropertyPanel = ({ selectedIds, faces, edges, nodes, lines, texts, faceTypes, faceDeductions, slopeTypes, totalArea, attributes, setFaceTypes, setFaceDeductions, setShouldSaveHistory, updateEdgeLength, applyLengthToNode, setSlopeTypes, fractionDigits, setFractionDigits, setLines, setTexts, setAttributes }) => {
+  const selectedIdArray = Array.from(selectedIds);
+  const isSingleSelection = selectedIdArray.length === 1;
+  const selectedId = isSingleSelection ? selectedIdArray[0] : null;
+
+  let selectedType = null;
+  if (isSingleSelection) {
+    if (faces.find(f => f.id === selectedId)) selectedType = 'face';
+    else if (edges.find(e => e.id === selectedId)) selectedType = 'edge';
+    else if (nodes.find(n => n.id === selectedId)) selectedType = 'node';
+    else if (lines.find(l => l.id === selectedId)) selectedType = 'line';
+    else if (texts.find(t => t.id === selectedId)) selectedType = 'text';
+  } else if (selectedIdArray.length > 1) { selectedType = 'multiple'; }
+
+  const selectedFace = selectedType === 'face' ? faces.find(f => f.id === selectedId) : null;
+  const selectedEdge = selectedType === 'edge' ? edges.find(e => e.id === selectedId) : null;
+  const selectedLine = selectedType === 'line' ? lines.find(l => l.id === selectedId) : null;
+  const selectedText = selectedType === 'text' ? texts.find(t => t.id === selectedId) : null;
+
+  const [localEdgeLength, setLocalEdgeLength] = useState('');
+  useEffect(() => { if (selectedEdge) setLocalEdgeLength(selectedEdge.length === null ? '' : String(selectedEdge.length)); else setLocalEdgeLength(''); }, [selectedId, selectedEdge?.length]);
+
+  return (
+    <div className="w-80 bg-white border-l border-slate-200 flex flex-col z-10 shadow-sm overflow-y-auto shrink-0">
+      <div className="p-3 border-b border-slate-200 bg-slate-50 sticky top-0 z-10"><h1 className="font-bold text-slate-800 text-base tracking-tight">三斜求積 作図エディタ</h1><p className="text-[10px] text-slate-500">工種と面積を管理</p></div>
+      <div className="p-3 flex-1">
+        <h2 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">プロパティ</h2>
+        
+        {selectedType === 'multiple' ? (
+          <div className="bg-blue-50 p-3 rounded-xl border border-blue-200 space-y-1"><div className="flex items-center gap-2 text-blue-700 text-sm font-medium mb-1"><IconMousePointer2 size={14}/> 複数選択中</div><p className="text-[10px] text-slate-600 leading-tight"><b>{selectedIds.size}</b> 個の要素を選択しています。ドラッグでまとめて移動・回転が可能です。<br/>(Deleteキーで一括削除できます)</p></div>
+        ) : selectedType === 'face' && selectedFace ? (
+          <div className="bg-emerald-50 p-3 rounded-xl border border-emerald-100 space-y-2">
+            <div className="flex items-center gap-2 text-emerald-800 text-sm font-medium mb-1"><div className="w-3.5 h-3.5 bg-emerald-500 rounded-sm opacity-60"></div>面 {selectedFace.number ? `(${slopeTypes.find(t => t.id === (faceTypes[selectedFace.id] || 't1'))?.name} ${selectedFace.number})` : ''}</div>
+            <div>
+              <label className="block text-[10px] text-slate-500 mb-0.5">工種</label>
+              <select value={faceTypes[selectedFace.id] || 't1'} onChange={e => { setFaceTypes(prev => ({ ...prev, [selectedFace.id]: e.target.value })); setShouldSaveHistory(true); }} className="w-full px-2 py-1.5 border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-transparent transition-all text-xs">{slopeTypes.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}</select>
+            </div>
+            <label className="flex items-center gap-2 mt-2 cursor-pointer bg-white px-2 py-1.5 border border-slate-200 rounded hover:bg-slate-50 transition-colors">
+              <input type="checkbox" checked={!!faceDeductions[selectedFace.id]} onChange={e => { setFaceDeductions(prev => ({ ...prev, [selectedFace.id]: e.target.checked })); setShouldSaveHistory(true); }} className="w-4 h-4 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500 cursor-pointer" />
+              <span className="text-xs text-slate-700 font-medium select-none">この面を控除（マイナス）として扱う</span>
+            </label>
+            <div className="flex justify-between items-center text-xs border-t border-emerald-200 pt-1.5 mt-1.5">
+              <span className="text-emerald-700">面積</span>
+              <span className={`font-bold text-sm ${faceDeductions[selectedFace.id] ? 'text-red-600' : 'text-emerald-900'}`}>{selectedFace.area !== null ? (faceDeductions[selectedFace.id] ? '-' : '') + selectedFace.area.toFixed(fractionDigits) : '-'} ㎡</span>
+            </div>
+          </div>
+        ) : selectedType === 'edge' && selectedEdge ? (
+          <div className="bg-blue-50 p-3 rounded-xl border border-blue-100 space-y-2"><div className="flex items-center gap-2 text-blue-800 text-sm font-medium mb-1"><div className="w-5 h-px bg-blue-800"></div>辺 (Edge)</div><div><label className="block text-[10px] text-slate-500 mb-0.5">測量長さ (m)</label><div className="flex gap-1.5"><input type="number" step="0.1" value={localEdgeLength} onChange={(e) => setLocalEdgeLength(e.target.value)} onBlur={() => { updateEdgeLength(selectedEdge.id, localEdgeLength); setShouldSaveHistory(true); }} onKeyDown={(e) => { if (e.key === 'Enter') { updateEdgeLength(selectedEdge.id, localEdgeLength); if (e.shiftKey) applyLengthToNode(selectedEdge.id, localEdgeLength); setShouldSaveHistory(true); } }} className="w-full px-2 py-1.5 border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent transition-all text-sm" placeholder="寸法を入力..." /><button onClick={() => { updateEdgeLength(selectedEdge.id, localEdgeLength); applyLengthToNode(selectedEdge.id, localEdgeLength); setShouldSaveHistory(true); }} className="px-2 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-[10px] font-medium rounded transition-colors whitespace-nowrap">見た目に反映</button></div></div><p className="text-[10px] text-slate-500 mt-1 leading-tight">数値を変更すると面積が自動再計算されます。「見た目に反映」で図面上の線の長さを調整できます。</p></div>
+        ) : selectedType === 'node' ? (
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1"><div className="flex items-center gap-2 text-slate-700 text-sm font-medium mb-1"><div className="w-3 h-3 rounded-full border-2 border-slate-700"></div>頂点 (Node)</div><p className="text-[10px] text-slate-500 leading-tight">キャンバス上でドラッグして、図面として整うように位置を調整してください。</p></div>
+        ) : selectedType === 'line' && selectedLine ? (
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2"><div className="flex items-center gap-2 text-slate-700 text-sm font-medium mb-1"><IconMinus size={14}/> 補助線</div><div><label className="block text-[10px] text-slate-500 mb-0.5">形状</label><select value={selectedLine.isCurve ? 'curve' : 'straight'} onChange={e => { setLines(prev => prev.map(l => l.id === selectedId ? { ...l, isCurve: e.target.value === 'curve' } : l)); setShouldSaveHistory(true); }} className="w-full px-2 py-1 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs"><option value="straight">折れ線 (直線)</option><option value="curve">滑らか (曲線)</option></select></div><div className="flex gap-2"><div className="flex-1"><label className="block text-[10px] text-slate-500 mb-0.5">線の色</label><input type="color" value={selectedLine.color} onChange={e => { setLines(prev => prev.map(l => l.id === selectedId ? { ...l, color: e.target.value } : l)); setShouldSaveHistory(true); }} className="w-full h-7 rounded cursor-pointer border border-slate-300 p-0" /></div><div className="flex-1"><label className="block text-[10px] text-slate-500 mb-0.5">線の太さ</label><input type="number" min="1" max="10" value={selectedLine.strokeWidth} onChange={e => { setLines(prev => prev.map(l => l.id === selectedId ? { ...l, strokeWidth: Number(e.target.value) } : l)); setShouldSaveHistory(true); }} className="w-full px-2 py-1 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs" /></div></div><div><label className="block text-[10px] text-slate-500 mb-0.5">種類</label><select value={selectedLine.strokeDasharray || 'none'} onChange={e => { setLines(prev => prev.map(l => l.id === selectedId ? { ...l, strokeDasharray: e.target.value } : l)); setShouldSaveHistory(true); }} className="w-full px-2 py-1 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs"><option value="none">実線</option><option value="4 4">点線</option><option value="8 8">破線</option><option value="12 4 4 4">一点鎖線</option></select></div></div>
+        ) : selectedType === 'text' && selectedText ? (
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2"><div className="flex items-center gap-2 text-slate-700 text-sm font-medium mb-1"><IconType size={14}/> テキスト</div><div><label className="block text-[10px] text-slate-500 mb-0.5">テキスト内容</label><input type="text" value={selectedText.text} onChange={e => { setTexts(prev => prev.map(t => t.id === selectedId ? { ...t, text: e.target.value } : t)); }} onBlur={() => setShouldSaveHistory(true)} onKeyDown={e => { if(e.key === 'Enter') setShouldSaveHistory(true); }} className="w-full px-2 py-1 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs" /></div><div className="flex gap-2"><div className="flex-1"><label className="block text-[10px] text-slate-500 mb-0.5">文字色</label><input type="color" value={selectedText.color} onChange={e => { setTexts(prev => prev.map(t => t.id === selectedId ? { ...t, color: e.target.value } : t)); setShouldSaveHistory(true); }} className="w-full h-7 rounded cursor-pointer border border-slate-300 p-0" /></div><div className="flex-1"><label className="block text-[10px] text-slate-500 mb-0.5">フォントサイズ</label><input type="number" min="4" max="72" value={selectedText.fontSize} onChange={e => { setTexts(prev => prev.map(t => t.id === selectedId ? { ...t, fontSize: Number(e.target.value) } : t)); setShouldSaveHistory(true); }} className="w-full px-2 py-1 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs" /></div></div><div><label className="block text-[10px] text-slate-500 mb-0.5">角度 (°)</label><div className="flex items-center gap-2"><input type="range" min="-180" max="180" value={selectedText.rotation || 0} onChange={e => { setTexts(prev => prev.map(t => t.id === selectedId ? { ...t, rotation: Number(e.target.value) } : t)); }} onMouseUp={() => setShouldSaveHistory(true)} onTouchEnd={() => setShouldSaveHistory(true)} className="flex-1 h-3" /><input type="number" value={selectedText.rotation || 0} onChange={e => { setTexts(prev => prev.map(t => t.id === selectedId ? { ...t, rotation: Number(e.target.value) } : t)); setShouldSaveHistory(true); }} className="w-14 px-1 py-1 border border-slate-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs text-center" /></div></div></div>
+        ) : (<div className="text-xs text-slate-500 text-center py-4 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">要素をクリックして選択</div>)}
+
+        <div className="mt-5">
+          <h2 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">計算結果</h2>
+          <div className="bg-slate-800 p-3 rounded-xl shadow-inner text-white"><div className="text-[10px] text-slate-300 mb-0.5">総面積 (控除面はマイナス)</div><div className="text-2xl font-bold tracking-tight">{totalArea.toFixed(fractionDigits)} <span className="text-sm text-slate-400 font-medium">㎡</span></div></div>
+          
+          <div className="mt-3 space-y-1"><div className="text-[10px] font-semibold text-slate-500 mb-1 border-b border-slate-200 pb-1">種類別 面積内訳</div>
+            {slopeTypes.map(type => {
+              const typeFaces = faces.filter(f => f.status === 'valid' && (faceTypes[f.id] || 't1') === type.id);
+              if (typeFaces.length === 0) return null;
+
+              const parentFaces = typeFaces.filter(f => !faceDeductions[f.id]);
+              const deductFaces = typeFaces.filter(f => faceDeductions[f.id]);
+
+              const parentArea = parentFaces.reduce((sum, f) => sum + f.area, 0);
+              const deductArea = deductFaces.reduce((sum, f) => sum + f.area, 0);
+              
+              if (parentArea === 0 && deductArea === 0) return null;
+
+              return (
+                <div key={type.id} className="border-b border-slate-100 last:border-0 py-1">
+                  <div className="flex justify-between items-center text-xs">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-3 h-3 rounded-full border border-slate-300 shadow-sm" style={{ backgroundColor: type.color }}></div>
+                      <span className="text-slate-700 font-medium truncate max-w-[120px]" title={type.name}>{type.name}</span>
+                    </div>
+                    <span className="font-semibold text-slate-800 whitespace-nowrap">{parentArea.toFixed(fractionDigits)} ㎡</span>
+                  </div>
+                  {deductFaces.length > 0 && (
+                    <div className="flex justify-between items-center text-[10px] mt-0.5 pl-4 pr-1">
+                      <span className="text-slate-500">└ 控除分</span>
+                      <span className="text-red-600 font-medium">-{deductArea.toFixed(fractionDigits)} ㎡</span>
+                    </div>
+                  )}
+                  {deductFaces.length > 0 && (
+                    <div className="flex justify-between items-center text-xs mt-0.5 pl-4 pr-1">
+                      <span className="text-slate-600 font-medium">差引面積</span>
+                      <span className="font-bold text-slate-800 border-t border-slate-200 pt-0.5">{(parentArea - deductArea).toFixed(fractionDigits)} ㎡</span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {faces.some(f => f.status === 'invalid_triangle') && (<div className="mt-3 p-2 bg-red-50 border border-red-200 rounded-lg flex gap-1.5 items-start text-red-700 text-[10px] leading-tight"><IconAlertCircle size={14} className="shrink-0 mt-px" /><p>寸法から三角形が成立しない面があります。赤い面を確認してください。</p></div>)}
+        </div>
+
+        <div className="mt-4 border-t border-slate-200 pt-3 pb-1"><div className="flex justify-between items-center mb-2"><h2 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">表示設定</h2></div><div className="flex items-center justify-between"><span className="text-xs text-slate-600">小数点以下の表示桁数</span><select value={fractionDigits} onChange={e => { setFractionDigits(Number(e.target.value)); setShouldSaveHistory(true); }} className="px-2 py-1 border border-slate-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs font-medium"><option value={0}>0桁 (整数)</option><option value={1}>1桁 (0.0)</option><option value={2}>2桁 (0.00)</option><option value={3}>3桁 (0.000)</option></select></div></div>
+
+        <div className="mt-3 border-t border-slate-200 pt-3 pb-2">
+          <div className="flex justify-between items-center mb-2"><h2 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">図面属性 (印刷用)</h2><button onClick={() => { setAttributes(prev => [...prev, { id: generateId(), key: '新規項目', value: '' }]); setShouldSaveHistory(true); }} className="text-[10px] text-blue-600 hover:text-blue-800 font-medium px-2 py-1 bg-blue-50 rounded transition-colors">+ 追加</button></div>
+          <div className="space-y-1.5">
+            {attributes.map((attr) => (
+              <div key={attr.id} className="flex items-center gap-1.5">
+                <input type="text" value={attr.key} onChange={e => setAttributes(prev => prev.map(a => a.id === attr.id ? { ...a, key: e.target.value } : a))} onBlur={() => setShouldSaveHistory(true)} onKeyDown={e => { if(e.key === 'Enter') setShouldSaveHistory(true); }} className="w-20 px-1.5 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 text-slate-600 bg-slate-50" placeholder="項目名" />
+                <input type="text" value={attr.value} onChange={e => setAttributes(prev => prev.map(a => a.id === attr.id ? { ...a, value: e.target.value } : a))} onBlur={() => setShouldSaveHistory(true)} onKeyDown={e => { if(e.key === 'Enter') setShouldSaveHistory(true); }} className="flex-1 px-1.5 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 min-w-0" placeholder="値" />
+                <button onClick={() => { setAttributes(prev => prev.filter(a => a.id !== attr.id)); setShouldSaveHistory(true); }} className="p-1 text-slate-400 hover:text-red-500 transition-colors shrink-0" title="削除"><IconEraser size={14} /></button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-3 border-t border-slate-200 pt-3 pb-2">
+          <div className="flex justify-between items-center mb-2"><h2 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">工種設定</h2><button onClick={() => { setSlopeTypes(prev => [...prev, { id: generateId(), name: '新規種類', shortName: '新', color: '#3b82f6' }]); setShouldSaveHistory(true); }} className="text-[10px] text-blue-600 hover:text-blue-800 font-medium px-2 py-1 bg-blue-50 rounded transition-colors">+ 追加</button></div>
+          <div className="space-y-1.5">
+            {slopeTypes.map((type, idx) => (
+              <div key={type.id} className="flex items-center gap-1.5">
+                <input type="color" value={type.color} onChange={e => setSlopeTypes(prev => prev.map(t => t.id === type.id ? { ...t, color: e.target.value } : t))} onBlur={() => setShouldSaveHistory(true)} className="w-6 h-6 rounded cursor-pointer border border-slate-300 p-0 shrink-0" title="色を変更" />
+                <input type="text" value={type.name} onChange={e => setSlopeTypes(prev => prev.map(t => t.id === type.id ? { ...t, name: e.target.value } : t))} onBlur={() => setShouldSaveHistory(true)} onKeyDown={e => { if(e.key === 'Enter') setShouldSaveHistory(true); }} className="flex-1 px-1.5 py-1 border border-slate-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 min-w-0" placeholder="名称" />
+                <input type="text" value={type.shortName || ''} onChange={e => setSlopeTypes(prev => prev.map(t => t.id === type.id ? { ...t, shortName: e.target.value } : t))} onBlur={() => setShouldSaveHistory(true)} onKeyDown={e => { if(e.key === 'Enter') setShouldSaveHistory(true); }} className="w-8 px-1 py-1 border border-slate-300 rounded text-[10px] focus:outline-none focus:ring-1 focus:ring-blue-500 text-center shrink-0" title="図面上の略称" placeholder="略" />
+                
+                {idx > 0 ? (<button onClick={() => { setSlopeTypes(prev => prev.filter(t => t.id !== type.id)); setFaceTypes(prev => { const next = { ...prev }; for (const k in next) if (next[k] === type.id) next[k] = 't1'; return next; }); setShouldSaveHistory(true); }} className="p-1 text-slate-400 hover:text-red-500 transition-colors shrink-0" title="この種類を削除"><IconEraser size={14} /></button>) : <div className="w-6"></div>}
+              </div>
+            ))}
+          </div>
+          <p className="text-[10px] text-slate-400 mt-2 leading-tight">※ 種類の色や名前を変更できます。一番上の「未設定」は削除できません。</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ==========================================
+// 8. SVG Render Components (Layers)
+// ==========================================
+const FacesLayer = React.memo(({ facesWithNumbers, faceTypes, faceDeductions, slopeTypes, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget, fractionDigits, currentMode }) => {
+  const invZoom = 1 / camera.zoom;
+  const deductFaces = facesWithNumbers.filter(f => faceDeductions[f.id] && f.status === 'valid');
+
+  return (
+    <>
+      <defs>
+        <mask id="deduction-mask">
+          <rect x="-100000" y="-100000" width="200000" height="200000" fill="white" />
+          {deductFaces.map(face => (
+            <polygon key={`mask-${face.id}`} points={face.nodes.map(n => `${n.x},${n.y}`).join(' ')} fill="black" />
+          ))}
+        </mask>
+        <pattern id="deduct-pattern" width="10" height="10" patternTransform={`scale(${invZoom}) rotate(45 0 0)`} patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="10" stroke="#ef4444" strokeWidth="1.5" opacity="0.6" />
+        </pattern>
+      </defs>
+
+      {facesWithNumbers.map(face => {
+        const pts = face.nodes.map(n => `${n.x},${n.y}`).join(' '), cx = face.nodes.reduce((sum, n) => sum + n.x, 0) / 3, cy = face.nodes.reduce((sum, n) => sum + n.y, 0) / 3;
+        const typeId = faceTypes[face.id] || 't1', sType = slopeTypes.find(t => t.id === typeId) || slopeTypes[0] || defaultSlopeTypes[0];
+        const isHovered = hoveredTarget.id === face.id && (hoveredTarget.type === 'face' || hoveredTarget.type === 'face_label');
+        const isSelectedFace = selectedIds.has(face.id);
+        const shortName = sType.shortName || sType.name.charAt(0), displayName = `${shortName}${face.number}`;
+        const isDeduct = faceDeductions[face.id];
+        
+        let fill = sType.color, fillOpacity = 0.4, stroke = "transparent", strokeW = 0, dashArray = "none";
+        
+        if (isDeduct) {
+          fill = "url(#deduct-pattern)";
+          fillOpacity = 1;
+          stroke = sType.color;
+          strokeW = 2;
+          dashArray = `${4 * invZoom} ${4 * invZoom}`;
+        }
+
+        if (face.status === 'invalid_triangle') { fill = "#e11d48"; fillOpacity = 0.2; stroke = "transparent"; dashArray = "none"; }
+        else if (face.status === 'missing_length') { fillOpacity = 0.1; stroke = sType.color; strokeW = 2; dashArray = `${8 * invZoom} ${6 * invZoom}`; }
+
+        if (isHovered) { fill = face.status === 'invalid_triangle' ? "rgba(225, 29, 72, 0.3)" : "rgba(249, 115, 22, 0.15)"; if (!isSelectedFace && !isDeduct) { stroke = "#fdba74"; strokeW = 2; dashArray = "none"; } }
+        if (isSelectedFace) { stroke = "#2563eb"; strokeW = 3; dashArray = "none"; }
+
+        const polygonPointerEvents = (dragState.type || currentMode === 'polygon' || currentMode === 'line' || currentMode === 'curve') ? "none" : "all";
+        const labelPointerEvents = dragState.type ? "none" : "all";
+
+        const hoverProps = createHoverProps(face.id, 'face', !!dragState.type, setHoveredTarget);
+        const hoverPropsLabel = createHoverProps(face.id, 'face_label', !!dragState.type, setHoveredTarget);
+        
+        const areaStr = face.area !== null ? (isDeduct ? `-${face.area.toFixed(fractionDigits)}` : face.area.toFixed(fractionDigits)) : '';
+        const maskAttr = (!isDeduct && face.status === 'valid') ? "url(#deduction-mask)" : undefined;
+
+        return (
+          <g key={face.id}>
+            <polygon points={pts} fill={fill} fillOpacity={fillOpacity} stroke={stroke} strokeWidth={strokeW * invZoom} strokeDasharray={dashArray} strokeLinejoin="round" pointerEvents={polygonPointerEvents} data-id={face.id} data-type="face" className={polygonPointerEvents === 'all' ? "cursor-pointer" : ""} mask={maskAttr} {...hoverProps} />
+            {face.status === 'valid' && (
+              <g transform={`translate(${cx}, ${cy}) scale(${invZoom})`}>
+                <text y="-10" dominantBaseline="middle" textAnchor="middle" stroke={isHovered ? "#fed7aa" : "white"} strokeWidth={isHovered ? "5" : "3"} strokeLinejoin="round" className="text-xs font-bold opacity-90 cursor-pointer transition-all duration-200" pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>{displayName}</text>
+                <text y="-10" dominantBaseline="middle" textAnchor="middle" fill="#334155" className="text-xs font-bold cursor-pointer" pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>{displayName}</text>
+                <text y="6" dominantBaseline="middle" textAnchor="middle" stroke={isHovered ? "#fed7aa" : "white"} strokeWidth={isHovered ? "6" : "4"} strokeLinejoin="round" className="text-sm font-bold opacity-90 cursor-pointer transition-all duration-200" pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>{areaStr}㎡</text>
+                <text y="6" dominantBaseline="middle" textAnchor="middle" className={`text-sm font-bold ${isDeduct ? 'fill-red-700' : 'fill-slate-800'} cursor-pointer`} pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>{areaStr}㎡</text>
+              </g>
+            )}
+            {face.status === 'missing_length' && (
+              <g transform={`translate(${cx}, ${cy}) scale(${invZoom})`}>
+                <text y="-10" dominantBaseline="middle" textAnchor="middle" stroke={isHovered ? "#fed7aa" : "white"} strokeWidth={isHovered ? "5" : "3"} strokeLinejoin="round" className="text-xs font-bold opacity-70 cursor-pointer transition-all duration-200" pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>{displayName}</text>
+                <text y="-10" dominantBaseline="middle" textAnchor="middle" fill="#94a3b8" className="text-xs font-bold cursor-pointer" pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>{displayName}</text>
+                <text y="6" dominantBaseline="middle" textAnchor="middle" stroke={isHovered ? "#fed7aa" : "white"} strokeWidth={isHovered ? "6" : "4"} strokeLinejoin="round" className="text-sm font-bold opacity-70 cursor-pointer transition-all duration-200" pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>? ㎡</text>
+                <text y="6" dominantBaseline="middle" textAnchor="middle" className="text-sm font-bold fill-slate-400 cursor-pointer" pointerEvents={labelPointerEvents} data-id={face.id} data-type="face_label" {...hoverPropsLabel}>? ㎡</text>
+              </g>
+            )}
+            {face.status === 'invalid_triangle' && <g transform={`translate(${cx}, ${cy}) scale(${invZoom})`}><text dominantBaseline="middle" textAnchor="middle" className="text-xl font-bold fill-rose-600 pointer-events-none">!</text></g>}
+          </g>
+        );
+      })}
+    </>
+  );
+});
+
+const EdgesLayer = React.memo(({ edges, nodes, facesWithNumbers, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget, fractionDigits }) => {
+  const invZoom = 1 / camera.zoom;
+  return (
+    <>
+      {edges.map(edge => {
+        const n1 = nodes.find(n => n.id === edge.source), n2 = nodes.find(n => n.id === edge.target);
+        if (!n1 || !n2) return null;
+        const cx = (n1.x + n2.x) / 2, cy = (n1.y + n2.y) / 2, dx = n2.x - n1.x, dy = n2.y - n1.y, len = Math.hypot(dx, dy);
+        const isSelected = selectedIds.has(edge.id);
+        const isHoveredEdge = hoveredTarget.id === edge.id && hoveredTarget.type === 'edge', isHoveredText = hoveredTarget.id === edge.id && hoveredTarget.type === 'edge_text';
+        const hasLength = edge.length !== null;
+        
+        let targetX = cx, targetY = cy, hasTarget = false, offsetX = 0, offsetY = -14 * invZoom;
+        const adjFace = facesWithNumbers.find(f => f.edges.some(e => e?.id === edge.id));
+        if (adjFace) { targetX = adjFace.nodes.reduce((s, n) => s + n.x, 0) / 3; targetY = adjFace.nodes.reduce((s, n) => s + n.y, 0) / 3; hasTarget = true; }
+        if (len > 0) {
+          let nx = -dy / len, ny = dx / len;
+          if (hasTarget && nx * (targetX - cx) + ny * (targetY - cy) < 0) { nx = -nx; ny = -ny; }
+          else if (!hasTarget && ny > 0) { nx = -nx; ny = -ny; }
+          offsetX = nx * 14 * invZoom; offsetY = ny * 14 * invZoom;
+        }
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI); if (angle > 90 || angle < -90) angle += 180;
+        const lengthText = hasLength ? Number(edge.length).toFixed(fractionDigits) : '?';
+
+        const hoverPropsEdge = createHoverProps(edge.id, 'edge', !!dragState.type, setHoveredTarget);
+        const hoverPropsText = createHoverProps(edge.id, 'edge_text', !!dragState.type, setHoveredTarget);
+
+        return (
+          <g key={edge.id}>
+            {(isHoveredEdge || isHoveredText) && <line x1={n1.x} y1={n1.y} x2={n2.x} y2={n2.y} stroke={isHoveredText ? "#3b82f6" : "#f97316"} strokeWidth={8 * invZoom} opacity="0.4" pointerEvents="none" strokeLinecap="round" />}
+            <line x1={n1.x} y1={n1.y} x2={n2.x} y2={n2.y} stroke="transparent" strokeWidth={20 * invZoom} data-id={edge.id} data-type="edge" className="cursor-pointer" {...hoverPropsEdge} />
+            <line x1={n1.x} y1={n1.y} x2={n2.x} y2={n2.y} stroke={isSelected ? "#2563eb" : (hasLength ? "#334155" : "#e11d48")} strokeWidth={isSelected ? (3 * invZoom) : (2 * invZoom)} strokeDasharray={hasLength ? "none" : `${4 * invZoom} ${4 * invZoom}`} pointerEvents="none" />
+            <g transform={`translate(${cx + offsetX}, ${cy + offsetY}) rotate(${angle}) scale(${invZoom})`}>
+              <rect x="-25" y="-15" width="50" height="30" fill="transparent" data-id={edge.id} data-type="edge_text" className="cursor-pointer" pointerEvents="all" {...hoverPropsText} />
+              <text data-id={edge.id} data-type="edge_text" dominantBaseline="middle" textAnchor="middle" stroke="transparent" strokeWidth="24" strokeLinejoin="round" className="text-base font-semibold cursor-pointer" pointerEvents="all" {...hoverPropsText}>{lengthText}</text>
+              <text dominantBaseline="middle" textAnchor="middle" stroke={isHoveredText ? "#bfdbfe" : "white"} strokeWidth={isHoveredText ? "8" : "5"} strokeLinejoin="round" className="text-base font-semibold pointer-events-none transition-all duration-200">{lengthText}</text>
+              <text dominantBaseline="middle" textAnchor="middle" className={`text-base font-semibold pointer-events-none ${hasLength ? (isHoveredText ? 'fill-blue-700' : 'fill-slate-800') : 'fill-rose-600'}`}>{lengthText}</text>
+            </g>
+          </g>
+        );
+      })}
+    </>
+  );
+});
+
+const NodesLayer = React.memo(({ nodes, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget }) => {
+  const invZoom = 1 / camera.zoom;
+  return (
+    <>
+      {nodes.map(node => {
+        const isSelected = selectedIds.has(node.id), isHovered = hoveredTarget.id === node.id && hoveredTarget.type === 'node';
+        const hoverProps = createHoverProps(node.id, 'node', !!dragState.type, setHoveredTarget);
+        return (
+          <g key={node.id}>
+            {isHovered && <circle cx={node.x} cy={node.y} r={12 * invZoom} fill="#f97316" opacity="0.4" pointerEvents="none" />}
+            <circle cx={node.x} cy={node.y} r={15 * invZoom} fill="transparent" data-id={node.id} data-type="node" className="cursor-pointer" {...hoverProps} />
+            <circle cx={node.x} cy={node.y} r={5 * invZoom} fill={isSelected ? "#2563eb" : "#ffffff"} stroke={isSelected ? "#1d4ed8" : "#475569"} strokeWidth={2 * invZoom} pointerEvents="none" />
+          </g>
+        );
+      })}
+    </>
+  );
+});
+
+const AnnotationsLayer = React.memo(({ lines, texts, camera, hoveredTarget, selectedIds, dragState, setHoveredTarget }) => {
+  const invZoom = 1 / camera.zoom;
+  return (
+    <>
+      {lines.map(line => {
+        const isSelected = selectedIds.has(line.id), isHovered = hoveredTarget.id === line.id && hoveredTarget.type === 'line';
+        const d = getSvgPathFromPoints(line.points, line.isCurve);
+        let highlightStroke = "none";
+        if (isSelected) highlightStroke = "#3b82f6"; else if (isHovered) highlightStroke = "#f97316";
+
+        const hoverProps = createHoverProps(line.id, 'line', !!dragState.type, setHoveredTarget);
+
+        return (
+          <g key={line.id}>
+            {(isSelected || isHovered) && <path d={d} fill="none" stroke={highlightStroke} strokeWidth={(line.strokeWidth + 6) * invZoom} opacity="0.4" pointerEvents="none" strokeLinecap="round" strokeLinejoin="round" />}
+            <path d={d} fill="none" stroke="transparent" strokeWidth={16 * invZoom} data-id={line.id} data-type="line" className="cursor-pointer" strokeLinecap="round" strokeLinejoin="round" {...hoverProps} />
+            <path d={d} fill="none" stroke={line.color} strokeWidth={line.strokeWidth * invZoom} strokeDasharray={line.strokeDasharray === 'none' ? 'none' : line.strokeDasharray.split(' ').map(v=>Number(v)*invZoom).join(' ')} strokeLinecap="round" strokeLinejoin="round" pointerEvents="none" />
+          </g>
+        );
+      })}
+      {texts.map(text => {
+        const isSelected = selectedIds.has(text.id), isHovered = hoveredTarget.id === text.id && hoveredTarget.type === 'text';
+        let highlightStroke = "none";
+        if (isSelected) highlightStroke = "#3b82f6"; else if (isHovered) highlightStroke = "#f97316";
+
+        const hoverProps = createHoverProps(text.id, 'text', !!dragState.type, setHoveredTarget);
+        const displayFontSize = text.fontSize * 2;
+
+        return (
+          <g key={text.id} transform={`translate(${text.x}, ${text.y}) rotate(${text.rotation || 0}) scale(${invZoom})`}>
+            {(isSelected || isHovered) && <text dominantBaseline="middle" textAnchor="middle" stroke={highlightStroke} strokeWidth={Math.max(8, displayFontSize * 0.5)} opacity="0.4" fontSize={displayFontSize} fontWeight="bold" pointerEvents="none">{text.text}</text>}
+            <text dominantBaseline="middle" textAnchor="middle" stroke="white" strokeWidth={Math.max(3, displayFontSize * 0.25)} strokeLinejoin="round" fill="none" fontSize={displayFontSize} fontWeight="bold" opacity="0.9" pointerEvents="none">{text.text}</text>
+            <text data-id={text.id} data-type="text" dominantBaseline="middle" textAnchor="middle" stroke="transparent" strokeWidth={Math.max(16, displayFontSize * 0.8)} fontSize={displayFontSize} fontWeight="bold" className="cursor-pointer select-none" {...hoverProps}>{text.text}</text>
+            <text dominantBaseline="middle" textAnchor="middle" fill={text.color} fontSize={displayFontSize} fontWeight="bold" pointerEvents="none">{text.text}</text>
+          </g>
+        );
+      })}
+    </>
+  );
+});
+
+const SelectionUILayer = React.memo(({ selectedIds, currentMode, nodes, lines, texts, edges, faces, camera }) => {
+  if (selectedIds.size === 0 || currentMode !== 'select') return null;
+  const elementsToMove = getActiveMovableElements(selectedIds, nodes, lines, texts, edges, faces);
+  const bbox = getSelectionBoundingBox(nodes, lines, texts, elementsToMove);
+  if (!bbox) return null;
+
+  const invZoom = 1 / camera.zoom;
+  const pad = 10 * invZoom;
+
+  return (
+    <g pointerEvents="none">
+      <rect x={bbox.minX - pad} y={bbox.minY - pad} width={bbox.w + pad*2} height={bbox.h + pad*2} fill="transparent" stroke="none" pointerEvents="all" className="move-handle cursor-move" />
+      <rect x={bbox.minX - pad} y={bbox.minY - pad} width={bbox.w + pad*2} height={bbox.h + pad*2} fill="none" stroke="#3b82f6" strokeWidth={1.5 * invZoom} strokeDasharray={`${5 * invZoom} ${5 * invZoom}`} />
+      <circle cx={bbox.cx} cy={bbox.cy} r={3 * invZoom} fill="#3b82f6" />
+      <line x1={bbox.cx} y1={bbox.minY - pad} x2={bbox.cx} y2={bbox.minY - pad - 20 * invZoom} stroke="#3b82f6" strokeWidth={1.5 * invZoom} />
+      <circle cx={bbox.cx} cy={bbox.minY - pad - 20 * invZoom} r={6 * invZoom} fill="white" stroke="#3b82f6" strokeWidth={2 * invZoom} className="rotate-handle cursor-crosshair" pointerEvents="all" />
+    </g>
+  );
+});
+
+const GuidesLayer = React.memo(({ dragState, snapLine, hoveredTarget, nodes, edges, camera }) => {
+  let drawEndX = dragState.currentX, drawEndY = dragState.currentY;
+  if (dragState.type?.startsWith('draw_triangle') || dragState.type?.startsWith('draw_line_')) {
+    if (hoveredTarget.type === 'node' && hoveredTarget.id !== dragState.sourceNodeId && hoveredTarget.id !== dragState.triangleNode1 && hoveredTarget.id !== dragState.triangleNode2) { const n = nodes.find(n => n.id === hoveredTarget.id); if (n) { drawEndX = n.x; drawEndY = n.y; } }
+    else if (hoveredTarget.type === 'edge') { const edge = edges.find(ed => ed.id === hoveredTarget.id); if (edge) { const snapPt = getEdgeSnapPoint({x: dragState.currentX, y: dragState.currentY}, edge, nodes); drawEndX = snapPt.x; drawEndY = snapPt.y; } }
+  }
+  return (
+    <>
+      {dragState.type === 'box_select' && (
+        <rect x={Math.min(dragState.logicalStartX, dragState.currentX)} y={Math.min(dragState.logicalStartY, dragState.currentY)} width={Math.abs(dragState.currentX - dragState.logicalStartX)} height={Math.abs(dragState.currentY - dragState.logicalStartY)} fill="rgba(59, 130, 246, 0.1)" stroke="#3b82f6" strokeWidth={1.5 / camera.zoom} pointerEvents="none" />
+      )}
+      {snapLine && dragState.type && (dragState.type.startsWith('draw_triangle') || dragState.type === 'move_node' || dragState.type.startsWith('draw_line_')) && <line x1={snapLine.x1} y1={snapLine.y1} x2={snapLine.x2} y2={snapLine.y2} stroke="#eab308" strokeWidth={1.5 / camera.zoom} strokeDasharray={`${5 / camera.zoom} ${5 / camera.zoom}`} pointerEvents="none" />}
+      {(dragState.type === 'draw_triangle_step1' || dragState.type === 'draw_triangle_step1_end_down') && <line x1={nodes.find(n=>n.id===dragState.sourceNodeId)?.x || dragState.startX} y1={nodes.find(n=>n.id===dragState.sourceNodeId)?.y || dragState.startY} x2={drawEndX} y2={drawEndY} stroke="#94a3b8" strokeWidth={2 / camera.zoom} strokeDasharray={`${4 / camera.zoom} ${4 / camera.zoom}`} pointerEvents="none" />}
+      {(dragState.type === 'draw_triangle_step2' || dragState.type === 'draw_triangle_step2_end_down') && <><line x1={nodes.find(n=>n.id===dragState.triangleNode1)?.x} y1={nodes.find(n=>n.id===dragState.triangleNode1)?.y} x2={drawEndX} y2={drawEndY} stroke="#94a3b8" strokeWidth={2 / camera.zoom} strokeDasharray={`${4 / camera.zoom} ${4 / camera.zoom}`} pointerEvents="none" /><line x1={nodes.find(n=>n.id===dragState.triangleNode2)?.x} y1={nodes.find(n=>n.id===dragState.triangleNode2)?.y} x2={drawEndX} y2={drawEndY} stroke="#94a3b8" strokeWidth={2 / camera.zoom} strokeDasharray={`${4 / camera.zoom} ${4 / camera.zoom}`} pointerEvents="none" /></>}
+      {dragState.type?.startsWith('draw_line_') && dragState.activeLinePoints && dragState.activeLinePoints.length > 0 && (
+        <path d={getSvgPathFromPoints([...dragState.activeLinePoints, {x: drawEndX, y: drawEndY}], dragState.isCurveMode)} stroke="#94a3b8" strokeWidth={2 / camera.zoom} fill="none" strokeDasharray={`${4 / camera.zoom} ${4 / camera.zoom}`} strokeLinecap="round" strokeLinejoin="round" pointerEvents="none" />
+      )}
+    </>
+  );
+});
+
+function App() {
+  const [currentMode, setCurrentMode] = useState('polygon');
+  
+  const [initData] = useState(() => getInitialData());
+
+  const [nodes, setNodes] = useState(initData?.nodes || defaultNodes);
+  const [edges, setEdges] = useState(initData?.edges || defaultEdges);
+  const [lines, setLines] = useState(initData?.lines || defaultLines);
+  const [texts, setTexts] = useState(initData?.texts || defaultTexts);
+  const [faceTypes, setFaceTypes] = useState(initData?.faceTypes || defaultFaceTypes);
+  const [faceDeductions, setFaceDeductions] = useState(initData?.faceDeductions || defaultFaceDeductions);
+  const [slopeTypes, setSlopeTypes] = useState(initData?.slopeTypes || defaultSlopeTypes);
+  const [fractionDigits, setFractionDigits] = useState(initData?.fractionDigits ?? defaultFractionDigits);
+  const [attributes, setAttributes] = useState(initData?.attributes || defaultAttributes);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+
+  const [camera, setCamera] = useState({ x: 0, y: 0, zoom: 1 });
+  const [dragState, setDragState] = useState(initialDragState);
+  const [snapLine, setSnapLine] = useState(null);
+  const [hoveredTarget, setHoveredTarget] = useState({ id: null, type: null });
+
+  const [lengthModalInfo, setLengthModalInfo] = useState({ isOpen: false, edgeId: null, initialValue: '', x: 0, y: 0 });
+  const [faceModalInfo, setFaceModalInfo] = useState({ isOpen: false, faceId: null, x: 0, y: 0 });
+  const [textModalInfo, setTextModalInfo] = useState({ isOpen: false, textId: null, initialText: '', x: 0, y: 0, logicalX: 0, logicalY: 0 });
+  const [printModalOpen, setPrintModalOpen] = useState(false);
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [clearModalOpen, setClearModalOpen] = useState(false);
+  const [defaultApplyLength, setDefaultApplyLength] = useState(false);
+  const [isDraggingOver, setIsDraggingOver] = useState(false);
+
+  const [shouldSaveHistory, setShouldSaveHistory] = useState(false);
+  const [history, setHistory] = useState([{ nodes: initData?.nodes || defaultNodes, edges: initData?.edges || defaultEdges, lines: initData?.lines || defaultLines, texts: initData?.texts || defaultTexts, faceTypes: initData?.faceTypes || defaultFaceTypes, faceDeductions: initData?.faceDeductions || defaultFaceDeductions, slopeTypes: initData?.slopeTypes || defaultSlopeTypes, fractionDigits: initData?.fractionDigits ?? defaultFractionDigits, attributes: initData?.attributes || defaultAttributes }]);
+  const [historyStep, setHistoryStep] = useState(0);
+
+  const faces = useMemo(() => computeFaces(nodes, edges, fractionDigits), [nodes, edges, fractionDigits]);
+  const facesWithNumbers = useMemo(() => computeFacesWithNumbers(faces, faceTypes), [faces, faceTypes]);
+  
+  const totalArea = useMemo(() => {
+    return faces.filter(f => f.status === 'valid').reduce((sum, f) => {
+      const isDeduction = faceDeductions[f.id];
+      return sum + (isDeduction ? -f.area : f.area);
+    }, 0);
+  }, [faces, faceDeductions]);
+
+  const svgRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  useEffect(() => { document.documentElement.lang = 'ja'; }, []);
+  useEffect(() => { localStorage.setItem('sansha_draw_data', JSON.stringify({ nodes, edges, lines, texts, faceTypes, faceDeductions, slopeTypes, fractionDigits, attributes })); }, [nodes, edges, lines, texts, faceTypes, faceDeductions, slopeTypes, fractionDigits, attributes]);
+
+  useEffect(() => {
+    if (shouldSaveHistory) {
+      const newState = { nodes, edges, lines, texts, faceTypes, faceDeductions, slopeTypes, fractionDigits, attributes };
+      const newHistory = history.slice(0, historyStep + 1);
+      newHistory.push(newState);
+      if (newHistory.length > 50) newHistory.shift(); 
+      setHistory(newHistory);
+      setHistoryStep(newHistory.length - 1);
+      setShouldSaveHistory(false);
+    }
+  }, [shouldSaveHistory, nodes, edges, lines, texts, faceTypes, faceDeductions, slopeTypes, fractionDigits, attributes, history, historyStep]);
+
+  const handleFitToView = (targetNodes = nodes, targetLines = lines, targetTexts = texts, targetEdges = edges, targetFaces = facesWithNumbers) => {
+    const useNodes = Array.isArray(targetNodes) ? targetNodes : nodes;
+    const useLines = Array.isArray(targetLines) ? targetLines : lines;
+    const useTexts = Array.isArray(targetTexts) ? targetTexts : texts;
+    const useEdges = Array.isArray(targetEdges) ? targetEdges : edges;
+    const useFaces = Array.isArray(targetFaces) ? targetFaces : facesWithNumbers;
+
+    const bbox = calculateDisplayBoundingBox(useNodes, useLines, useTexts, useEdges, useFaces);
+    if (!bbox) return setCamera({ x: 0, y: 0, zoom: 1 });
+
+    const { minX, minY, w, h } = bbox;
+    const rect = svgRef.current ? svgRef.current.getBoundingClientRect() : { width: window.innerWidth - 384, height: window.innerHeight };
+    const zoom = Math.min((rect.width - 60) / w, (rect.height - 60) / h, 2);
+    setCamera({ x: rect.width / 2 - (minX + w / 2) * zoom, y: rect.height / 2 - (minY + h / 2) * zoom, zoom });
+  };
+  useEffect(() => { setTimeout(() => handleFitToView(), 100); }, []);
+
+  const handleFileLoad = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => { 
+      try { 
+        const parsed = JSON.parse(ev.target.result); 
+        const migrated = migrateData(parsed);
+        if (migrated) {
+          setNodes(migrated.nodes); setEdges(migrated.edges); 
+          setLines(migrated.lines); setTexts(migrated.texts); 
+          setFaceTypes(migrated.faceTypes); setFaceDeductions(migrated.faceDeductions); setSlopeTypes(migrated.slopeTypes); 
+          setFractionDigits(migrated.fractionDigits); setAttributes(migrated.attributes);
+          setHistory([migrated]); 
+          setHistoryStep(0); setSelectedIds(new Set()); 
+          
+          setTimeout(() => {
+            const newFaces = computeFaces(migrated.nodes, migrated.edges, migrated.fractionDigits);
+            const newFacesWithNumbers = computeFacesWithNumbers(newFaces, migrated.faceTypes);
+            handleFitToView(migrated.nodes, migrated.lines, migrated.texts, migrated.edges, newFacesWithNumbers);
+          }, 100); 
+        } 
+      } catch (err) { console.error('ファイルの読み込みに失敗しました。', err); } 
+    }; 
+    reader.readAsText(file);
+  };
+  const handleDragOver = (e) => { e.preventDefault(); e.stopPropagation(); setIsDraggingOver(true); };
+  const handleDragLeave = (e) => { e.preventDefault(); e.stopPropagation(); if (!e.currentTarget.contains(e.relatedTarget)) setIsDraggingOver(false); };
+  const handleDrop = (e) => { e.preventDefault(); e.stopPropagation(); setIsDraggingOver(false); if (e.dataTransfer.files && e.dataTransfer.files.length > 0) handleFileLoad(e.dataTransfer.files[0]); };
+
+  const cancelDraw = () => {
+    if (dragState.type?.startsWith('draw_triangle') || dragState.type?.startsWith('draw_line_')) {
+      if ((dragState.type === 'draw_line_active' || dragState.type === 'draw_line_continue_down') && dragState.activeLinePoints && dragState.activeLinePoints.length >= 2) {
+        setLines(prev => [...prev, { id: generateId(), points: dragState.activeLinePoints, color: '#64748b', strokeWidth: 2, strokeDasharray: 'none', isCurve: dragState.isCurveMode }]);
+        setShouldSaveHistory(true);
+      }
+      setDragState(initialDragState); setSnapLine(null); setHoveredTarget({ id: null, type: null });
+    }
+  };
+
+  const applyHistory = (step) => {
+    cancelDraw();
+    const state = history[step];
+    setNodes(state.nodes); setEdges(state.edges); setLines(state.lines || []); setTexts(state.texts || []);
+    setFaceTypes(state.faceTypes); setFaceDeductions(state.faceDeductions || {}); setSlopeTypes(state.slopeTypes); setFractionDigits(state.fractionDigits ?? 2); setAttributes(state.attributes || defaultAttributes);
+    setHistoryStep(step); setSelectedIds(new Set());
+    closeModalsAndReset();
+  };
+
+  const undo = () => { if (historyStep > 0) applyHistory(historyStep - 1); };
+  const redo = () => { if (historyStep < history.length - 1) applyHistory(historyStep + 1); };
+
+  const closeModalsAndReset = () => {
+    setLengthModalInfo(p => ({ ...p, isOpen: false })); setFaceModalInfo(p => ({ ...p, isOpen: false })); setTextModalInfo(p => ({ ...p, isOpen: false }));
+    setPrintModalOpen(false); setExportModalOpen(false); setClearModalOpen(false);
+    setHoveredTarget({ id: null, type: null });
+  };
+
+  const tryCloseModals = (e, tType) => {
+    let closed = false;
+    if (lengthModalInfo.isOpen && tType !== 'edge_text') { setLengthModalInfo(p => ({ ...p, isOpen: false })); closed = true; }
+    if (faceModalInfo.isOpen && tType !== 'face' && !e.target.closest('.face-modal-content')) { setFaceModalInfo(p => ({ ...p, isOpen: false })); closed = true; }
+    if (textModalInfo.isOpen && tType !== 'text') { setTextModalInfo(p => ({ ...p, isOpen: false })); closed = true; }
+    if (closed) setHoveredTarget({ id: null, type: null });
+    return closed;
+  };
+
+  const abortCurrentOperation = () => {
+    if (dragState.type?.startsWith('draw_triangle_step2')) {
+      if (dragState.isNode2New) setNodes(prev => prev.filter(n => n.id !== dragState.triangleNode2));
+      setEdges(prev => prev.filter(ed => ed.id !== dragState.edge1Id));
+    }
+    if (dragState.type?.startsWith('draw_triangle') && dragState.isNewNode) setNodes(prev => prev.filter(n => n.id !== dragState.sourceNodeId));
+    if (dragState.type?.startsWith('draw_line_')) cancelDraw();
+    
+    setDragState(initialDragState); setSelectedIds(new Set()); setSnapLine(null); setHoveredTarget({ id: null, type: null });
+  };
+
+  const executeDelete = (idsToDelete = selectedIds) => {
+    if (idsToDelete.size === 0) return;
+    let currentNodes = [...nodes], currentEdges = [...edges], currentLines = [...lines], currentTexts = [...texts], currentFaceTypes = { ...faceTypes }, currentFaceDeductions = { ...faceDeductions };
+
+    idsToDelete.forEach(targetId => {
+      if (currentNodes.find(n => n.id === targetId)) {
+        currentNodes = currentNodes.filter(n => n.id !== targetId);
+        currentEdges = currentEdges.filter(edge => edge.source !== targetId && edge.target !== targetId);
+      } else if (currentEdges.find(e => e.id === targetId)) {
+        currentEdges = currentEdges.filter(edge => edge.id !== targetId);
+      } else if (currentLines.find(l => l.id === targetId)) {
+        currentLines = currentLines.filter(l => l.id !== targetId);
+      } else if (currentTexts.find(t => t.id === targetId)) {
+        currentTexts = currentTexts.filter(t => t.id !== targetId);
+      } else if (faces.find(f => f.id === targetId)) {
+        const face = faces.find(f => f.id === targetId);
+        if (face) {
+          const otherFaces = faces.filter(f => f.id !== targetId && !idsToDelete.has(f.id));
+          const edgesToRemove = face.edges.filter(edge => !otherFaces.some(of => of.edges.some(e => e && e.id === edge.id))).map(e => e.id);
+          currentEdges = currentEdges.filter(e => !edgesToRemove.includes(e.id));
+          delete currentFaceTypes[targetId];
+          delete currentFaceDeductions[targetId];
+        }
+      }
+    });
+
+    const activeNodeIds = new Set();
+    currentEdges.forEach(e => { activeNodeIds.add(e.source); activeNodeIds.add(e.target); });
+    currentNodes = currentNodes.filter(n => activeNodeIds.has(n.id) || nodes.some(on => on.id === n.id && !edges.some(e => e.source === n.id || e.target === n.id)));
+
+    setNodes(currentNodes); setEdges(currentEdges); setLines(currentLines); setTexts(currentTexts); setFaceTypes(currentFaceTypes); setFaceDeductions(currentFaceDeductions);
+    
+    if (idsToDelete === selectedIds) setSelectedIds(new Set());
+    else { const newSelected = new Set(selectedIds); idsToDelete.forEach(id => newSelected.delete(id)); setSelectedIds(newSelected); }
+    
+    closeModalsAndReset(); setShouldSaveHistory(true);
+  };
+
+  const handleClearAll = () => {
+    setNodes([]); setEdges([]); setLines([]); setTexts([]); setFaceTypes({}); setFaceDeductions({}); setAttributes(defaultAttributes);
+    setShouldSaveHistory(true); setClearModalOpen(false); setDragState(initialDragState);
+    setSelectedIds(new Set()); setHoveredTarget({ id: null, type: null }); setCamera({ x: 0, y: 0, zoom: 1 });
+  };
+
+  const handlePrintHTML = (printOptions) => {
+    setPrintModalOpen(false);
+    const drawData = { nodes, edges, lines, texts, faceTypes, faceDeductions, slopeTypes, fractionDigits, attributes, facesWithNumbers, totalArea };
+    exportToHTML(printOptions, drawData);
+  };
+
+  const handleExport = (fileName) => {
+    setExportModalOpen(false);
+    if (!fileName || !fileName.trim()) return;
+    const finalFileName = fileName.endsWith('.json') ? fileName : fileName + '.json';
+    const data = JSON.stringify({ nodes, edges, lines, texts, faceTypes, faceDeductions, slopeTypes, fractionDigits, attributes }, null, 2);
+    const url = URL.createObjectURL(new Blob([data], { type: 'application/json' }));
+    const a = document.createElement('a'); a.href = url; a.download = finalFileName; a.click(); URL.revokeObjectURL(url);
+  };
+
+  const updateEdgeLength = (id, newLengthStr) => {
+    const val = parseFloat(newLengthStr);
+    setEdges(prev => prev.map(e => e.id === id ? { ...e, length: isNaN(val) ? null : val } : e));
+  };
+
+  const applyLengthToNode = (edgeId, newLengthValStr) => {
+    const val = parseFloat(newLengthValStr);
+    if (isNaN(val) || val <= 0) return;
+    const edge = edges.find(e => e.id === edgeId);
+    if (!edge) return;
+    const n1 = nodes.find(n => n.id === edge.source), n2 = nodes.find(n => n.id === edge.target);
+    if (n1 && n2) {
+      const newPxLen = val * 20, currentPxLen = Math.hypot(n2.x - n1.x, n2.y - n1.y);
+      if (currentPxLen > 0) {
+        const n1FacesCount = faces.filter(f => f.nodes.some(n => n.id === n1.id)).length, n2FacesCount = faces.filter(f => f.nodes.some(n => n.id === n2.id)).length;
+        let movingNodeId = n2.id, fixedNodeId = n1.id;
+        if (n1FacesCount < n2FacesCount) { movingNodeId = n1.id; fixedNodeId = n2.id; }
+        else if (n1FacesCount === n2FacesCount) {
+          const n1EdgesCount = edges.filter(e => e.source === n1.id || e.target === n1.id).length, n2EdgesCount = edges.filter(e => e.source === n2.id || e.target === n2.id).length;
+          if (n1EdgesCount < n2EdgesCount) { movingNodeId = n1.id; fixedNodeId = n2.id; }
+        }
+        const fixedNode = movingNodeId === n2.id ? n1 : n2, movingNode = movingNodeId === n2.id ? n2 : n1;
+        const dx = movingNode.x - fixedNode.x, dy = movingNode.y - fixedNode.y;
+        setNodes(prev => prev.map(n => n.id === movingNodeId ? { ...n, x: fixedNode.x + (dx / currentPxLen) * newPxLen, y: fixedNode.y + (dy / currentPxLen) * newPxLen } : n));
+      }
+    }
+  };
+
+  const handleConfirmLength = (edgeId, valStr, shouldApply) => {
+    setDefaultApplyLength(shouldApply);
+    if (shouldApply) applyLengthToNode(edgeId, valStr);
+    updateEdgeLength(edgeId, valStr);
+    closeModalsAndReset(); setSelectedIds(new Set()); setShouldSaveHistory(true);
+  };
+
+  const handleConfirmText = (textId, textValue, logicalX, logicalY) => {
+    if (!textValue.trim()) {
+      if (textId) executeDelete(new Set([textId]));
+      closeModalsAndReset(); return;
+    }
+    if (textId) setTexts(prev => prev.map(t => t.id === textId ? { ...t, text: textValue } : t));
+    else setTexts(prev => [...prev, { id: generateId(), x: logicalX, y: logicalY, text: textValue, color: '#334155', fontSize: 8, rotation: 0 }]);
+    closeModalsAndReset(); setSelectedIds(new Set()); setShouldSaveHistory(true);
+  };
+
+  const handleSelectFaceType = (faceId, typeId) => {
+    setFaceTypes(prev => ({ ...prev, [faceId]: typeId }));
+    setShouldSaveHistory(true);
+  };
+
+  const handleAddFaceType = (faceId, newName) => {
+    const newId = generateId(), colors = ['#f43f5e', '#8b5cf6', '#0ea5e9', '#10b981', '#f59e0b', '#ec4899'];
+    const match = newName.match(/^(.)[^a-zA-Z0-9]*([a-zA-Z0-9]+)$/);
+    const shortName = match ? `${match[1]}\${match[2]}` : newName.charAt(0);
+    setSlopeTypes(prev => [...prev, { id: newId, name: newName, shortName: shortName, color: colors[Math.floor(Math.random() * colors.length)], isDeduction: false }]);
+    setFaceTypes(prev => ({ ...prev, [faceId]: newId }));
+    setShouldSaveHistory(true);
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    if (!svgRef.current) return;
+    const rect = svgRef.current.getBoundingClientRect(), mouseX = e.clientX - rect.left, mouseY = e.clientY - rect.top;
+    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1, newZoom = Math.min(Math.max(camera.zoom * zoomFactor, 0.1), 10);
+    const logicalX = (mouseX - camera.x) / camera.zoom, logicalY = (mouseY - camera.y) / camera.zoom;
+    setCamera({ x: mouseX - logicalX * newZoom, y: mouseY - logicalY * newZoom, zoom: newZoom });
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); if (e.shiftKey) redo(); else undo(); return; }
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') { e.preventDefault(); redo(); return; }
+      if (e.key === 'Escape') {
+        if (lengthModalInfo.isOpen || faceModalInfo.isOpen || textModalInfo.isOpen || printModalOpen || exportModalOpen || clearModalOpen) {
+          closeModalsAndReset();
+        }
+        abortCurrentOperation();
+      }
+      if ((e.key === 'Delete' || e.key === 'Backspace') && e.target.tagName.toLowerCase() !== 'input' && selectedIds.size > 0) {
+        executeDelete();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIds, dragState, lengthModalInfo.isOpen, history, historyStep, faceModalInfo.isOpen, textModalInfo.isOpen]);
+
+  const handlePointerDown = (e) => {
+    let tType = e.target.getAttribute('data-type'), tId = e.target.getAttribute('data-id');
+    const isRotateHandle = e.target.classList.contains('rotate-handle'), isMoveHandle = e.target.classList.contains('move-handle');
+    
+    if (tryCloseModals(e, tType)) return;
+
+    if (tType === 'edge_text') tType = 'edge';
+    const pt = getLogicalPoint(e.clientX, e.clientY, camera, svgRef.current?.getBoundingClientRect());
+
+    if (e.button === 2 || e.button === 1 || (e.shiftKey && !tId && currentMode !== 'select')) { 
+      e.preventDefault();
+      if (e.button === 2 && currentMode === 'select' && selectedIds.size > 0 && !tId && !isMoveHandle) { setSelectedIds(new Set()); return; }
+      if (e.button === 2 && (dragState.type?.startsWith('draw_line_') || dragState.type?.startsWith('draw_triangle'))) { abortCurrentOperation(); return; }
+      if (e.button === 2 && tId && tType !== 'drawing-layer') {
+        setDragState({ ...initialDragState, isDragging: true, type: 'wait_for_pan_or_right_click', startX: e.clientX, startY: e.clientY, logicalStartX: pt.x, logicalStartY: pt.y, targetType: tType, targetId: tId, initCamera: { ...camera } });
+        return;
+      }
+      setDragState(prev => ({ ...prev, isDragging: true, type: 'pan', startX: e.clientX, startY: e.clientY, initCamera: { ...camera }, returnTo: (prev.type === 'draw_line_active' || prev.type === 'draw_line_continue_down') ? 'draw_line_active' : null })); 
+      return; 
+    }
+
+    if (currentMode === 'select') {
+      if (isRotateHandle) {
+        const elementsToMove = getActiveMovableElements(selectedIds, nodes, lines, texts, edges, faces);
+        const bbox = getSelectionBoundingBox(nodes, lines, texts, elementsToMove);
+        if (bbox) setDragState({ ...initialDragState, isDragging: true, type: 'rotate_selection', startX: e.clientX, startY: e.clientY, logicalStartX: pt.x, logicalStartY: pt.y, centerX: bbox.cx, centerY: bbox.cy, initialNodes: nodes, initialLines: lines, initialTexts: texts, elementsToMove });
+        return;
+      }
+      if (isMoveHandle) {
+        const elementsToMove = getActiveMovableElements(selectedIds, nodes, lines, texts, edges, faces);
+        setDragState({ ...initialDragState, isDragging: true, type: 'move_selection', startX: e.clientX, startY: e.clientY, logicalStartX: pt.x, logicalStartY: pt.y, initialNodes: nodes, initialLines: lines, initialTexts: texts, elementsToMove });
+        return;
+      }
+      if (tId && tType !== 'drawing-layer') {
+        const newSelected = new Set(e.shiftKey ? selectedIds : []);
+        if (e.shiftKey) { if (newSelected.has(tId)) newSelected.delete(tId); else newSelected.add(tId); } 
+        else { if (!newSelected.has(tId)) { newSelected.clear(); newSelected.add(tId); } }
+        setSelectedIds(newSelected);
+        const elementsToMove = getActiveMovableElements(newSelected, nodes, lines, texts, edges, faces);
+        setDragState({ ...initialDragState, isDragging: true, type: 'move_selection', startX: e.clientX, startY: e.clientY, logicalStartX: pt.x, logicalStartY: pt.y, initialNodes: nodes, initialLines: lines, initialTexts: texts, elementsToMove });
+        return;
+      }
+      if (!e.shiftKey) setSelectedIds(new Set());
+      setDragState({ ...initialDragState, isDragging: true, type: 'box_select', startX: e.clientX, startY: e.clientY, logicalStartX: pt.x, logicalStartY: pt.y, currentX: pt.x, currentY: pt.y, initCamera: { ...camera } });
+      return;
+    }
+
+    if (tId && tType !== 'drawing-layer' && !dragState.type?.startsWith('draw_line_')) setSelectedIds(new Set([tId]));
+
+    if (currentMode === 'line' || currentMode === 'curve') {
+      let snapPt = { x: pt.x, y: pt.y };
+      if (tType === 'node') { const n = nodes.find(n => n.id === tId); if (n) snapPt = { x: n.x, y: n.y }; } 
+      else if (tType === 'edge') { const edge = edges.find(ed => ed.id === tId); if (edge) snapPt = getEdgeSnapPoint(pt, edge, nodes); }
+
+      if (dragState.type === 'draw_line_active') {
+        setDragState(prev => ({ ...prev, isDragging: true, type: 'draw_line_continue_down', startX: e.clientX, startY: e.clientY, currentX: snapPt.x, currentY: snapPt.y, initCamera: { ...camera } }));
+      } else {
+        if (!tId) setSelectedIds(new Set());
+        setDragState({ ...initialDragState, isDragging: true, type: 'draw_line_start_down', startX: e.clientX, startY: e.clientY, logicalStartX: snapPt.x, logicalStartY: snapPt.y, currentX: snapPt.x, currentY: snapPt.y, initCamera: { ...camera }, isCurveMode: currentMode === 'curve' });
+      }
+      return;
+    }
+
+    if (currentMode === 'text') {
+      if (tType === 'text') {
+        const textObj = texts.find(t => t.id === tId);
+        if (textObj) {
+          setTextModalInfo({ isOpen: true, textId: tId, initialText: textObj.text, x: e.clientX, y: e.clientY, logicalX: pt.x, logicalY: pt.y });
+          return;
+        }
+      }
+      if (!tId) setSelectedIds(new Set());
+      setTextModalInfo({ isOpen: true, textId: null, initialText: '', x: e.clientX, y: e.clientY, logicalX: pt.x, logicalY: pt.y });
+      return;
+    }
+
+    if (dragState.type === 'draw_triangle_step1') return setDragState(prev => ({ ...prev, isDragging: true, type: 'draw_triangle_step1_end_down' }));
+    if (dragState.type === 'draw_triangle_step2') return setDragState(prev => ({ ...prev, isDragging: true, type: 'draw_triangle_step2_end_down' }));
+
+    if (tType === 'node') {
+      const trackingNodeIds = edges.filter(ed => ed.source === tId || ed.target === tId).map(ed => ed.source === tId ? ed.target : ed.source);
+      setDragState({ ...initialDragState, isDragging: true, type: 'node_down', sourceNodeId: tId, startX: e.clientX, startY: e.clientY, logicalStartX: pt.x, logicalStartY: pt.y, trackingNodeIds });
+      return;
+    } 
+
+    if (e.target.getAttribute('data-type') === 'edge_text') {
+      setLengthModalInfo({ isOpen: true, edgeId: tId, initialValue: edges.find(ed => ed.id === tId)?.length?.toString() || '', x: e.clientX, y: e.clientY });
+      return;
+    }
+
+    setDragState({ ...initialDragState, isDragging: true, type: 'wait_for_pan_or_click', startX: e.clientX, startY: e.clientY, logicalStartX: pt.x, logicalStartY: pt.y, targetType: tType, targetId: tId, initCamera: { ...camera } });
+  };
+
+  const handlePointerMove = (e) => {
+    const rawPt = getLogicalPoint(e.clientX, e.clientY, camera, svgRef.current?.getBoundingClientRect());
+
+    if (dragState.isDragging) {
+      const dist = Math.hypot(e.clientX - dragState.startX, e.clientY - dragState.startY);
+      if (dist > 5) {
+        if (dragState.type === 'wait_for_pan_or_click' || dragState.type === 'draw_line_start_down' || dragState.type === 'wait_for_pan_or_right_click') {
+          setDragState(prev => ({ ...prev, type: 'pan' }));
+        } else if (dragState.type === 'draw_line_continue_down') {
+          setDragState(prev => ({ ...prev, type: 'pan', returnTo: 'draw_line_active' }));
+        } else if (dragState.type === 'node_down') {
+          setDragState(prev => ({ ...prev, type: 'move_node' }));
+          setNodes(prev => prev.map(n => n.id === dragState.sourceNodeId ? { ...n, x: rawPt.x, y: rawPt.y } : n));
+        }
+      }
+    }
+
+    if (dragState.type === 'pan') { setCamera({ ...camera, x: dragState.initCamera.x + (e.clientX - dragState.startX), y: dragState.initCamera.y + (e.clientY - dragState.startY) }); return; }
+    if (dragState.type === 'box_select') { setDragState(prev => ({ ...prev, currentX: rawPt.x, currentY: rawPt.y })); return; }
+
+    if (dragState.type === 'move_selection') {
+      const dx = rawPt.x - dragState.logicalStartX, dy = rawPt.y - dragState.logicalStartY;
+      const { nodeIds, lineIds, textIds } = dragState.elementsToMove;
+      setNodes(dragState.initialNodes.map(n => nodeIds.has(n.id) ? { ...n, x: n.x + dx, y: n.y + dy } : n));
+      setLines(dragState.initialLines.map(l => lineIds.has(l.id) ? { ...l, points: l.points.map(p => ({ x: p.x + dx, y: p.y + dy })) } : l));
+      setTexts(dragState.initialTexts.map(t => textIds.has(t.id) ? { ...t, x: t.x + dx, y: t.y + dy } : t));
+      return;
+    }
+
+    if (dragState.type === 'rotate_selection') {
+      const { centerX, centerY, elementsToMove } = dragState;
+      const initialAngle = Math.atan2(dragState.logicalStartY - centerY, dragState.logicalStartX - centerX);
+      const currentAngle = Math.atan2(rawPt.y - centerY, rawPt.x - centerX);
+      let dAngle = currentAngle - initialAngle;
+      if (e.shiftKey) dAngle = Math.round((dAngle * 180 / Math.PI) / 15) * 15 * Math.PI / 180;
+      const cos = Math.cos(dAngle), sin = Math.sin(dAngle);
+      const rotatePt = (p) => ({ x: centerX + (p.x - centerX) * cos - (p.y - centerY) * sin, y: centerY + (p.x - centerX) * sin + (p.y - centerY) * cos });
+
+      setNodes(dragState.initialNodes.map(n => elementsToMove.nodeIds.has(n.id) ? { ...n, ...rotatePt(n) } : n));
+      setLines(dragState.initialLines.map(l => elementsToMove.lineIds.has(l.id) ? { ...l, points: l.points.map(rotatePt) } : l));
+      setTexts(dragState.initialTexts.map(t => elementsToMove.textIds.has(t.id) ? { ...t, ...rotatePt(t), rotation: (t.rotation || 0) + (dAngle * 180 / Math.PI) } : t));
+      return;
+    }
+
+    if (dragState.type?.startsWith('draw_triangle') || dragState.type?.startsWith('draw_line_') || dragState.type === 'move_node' || !dragState.type) {
+      let pt = { ...rawPt }, currentSnapLine = null, currentHoveredTarget = { id: null, type: null };
+      
+      const excludeIds = [
+        dragState.type === 'move_node' ? dragState.sourceNodeId : null,
+        dragState.type?.startsWith('draw_triangle_step1') ? dragState.sourceNodeId : null, 
+        dragState.type?.startsWith('draw_triangle_step2') ? dragState.triangleNode1 : null, 
+        dragState.type?.startsWith('draw_triangle_step2') ? dragState.triangleNode2 : null
+      ].filter(Boolean);
+
+      let minDist = 20 / camera.zoom;
+      nodes.forEach(n => {
+        if (excludeIds.includes(n.id)) return;
+        const d = Math.hypot(rawPt.x - n.x, rawPt.y - n.y);
+        if (d < minDist) { minDist = d; pt = { x: n.x, y: n.y }; currentHoveredTarget = { id: n.id, type: 'node' }; }
+      });
+      
+      if (!currentHoveredTarget.id) {
+        edges.forEach(edge => {
+          if (dragState.type === 'move_node' && (edge.source === dragState.sourceNodeId || edge.target === dragState.sourceNodeId)) return;
+          const n1 = nodes.find(n => n.id === edge.source), n2 = nodes.find(n => n.id === edge.target);
+          if (!n1 || !n2) return;
+          const dx = n2.x - n1.x, dy = n2.y - n1.y, lenSq = dx * dx + dy * dy;
+          if (lenSq === 0) return;
+          const t = ((rawPt.x - n1.x) * dx + (rawPt.y - n1.y) * dy) / lenSq;
+          if (t >= 0 && t <= 1) {
+            const projX = n1.x + t * dx, projY = n1.y + t * dy;
+            const d = Math.hypot(rawPt.x - projX, rawPt.y - projY);
+            if (d < minDist) { minDist = d; pt = { x: projX, y: projY }; currentHoveredTarget = { id: edge.id, type: 'edge' }; }
+          }
+        });
+      }
+
+      let tType = e.target.getAttribute('data-type'), tId = e.target.getAttribute('data-id');
+      let finalHoveredTarget = { id: null, type: null };
+      if (tType === 'node' || tType === 'edge_text' || tType === 'text' || tType === 'face_label') finalHoveredTarget = { id: tId, type: tType };
+      else if (currentHoveredTarget.type === 'node') finalHoveredTarget = currentHoveredTarget;
+      else if (tType === 'line') finalHoveredTarget = { id: tId, type: tType };
+      else if (currentHoveredTarget.type === 'edge') finalHoveredTarget = currentHoveredTarget;
+      else if (tType === 'face') finalHoveredTarget = { id: tId, type: tType };
+
+      setHoveredTarget(finalHoveredTarget);
+
+      if (!currentHoveredTarget.id && dragState.trackingNodeIds?.length > 0 && dragState.type !== 'move_node') {
+        let minDistLine = 15 / camera.zoom;
+        const sourceNode = nodes.find(n => n.id === (dragState.type.startsWith('draw_triangle_step1') ? dragState.sourceNodeId : dragState.triangleNode2));
+        if (sourceNode) {
+          dragState.trackingNodeIds.forEach(nodeId => {
+            const n = nodes.find(nd => nd.id === nodeId);
+            if (!n) return;
+            const dx = n.x - sourceNode.x, dy = n.y - sourceNode.y, len = Math.hypot(dx, dy);
+            if (len === 0) return;
+            const ux = dx / len, uy = dy / len, wx = rawPt.x - sourceNode.x, wy = rawPt.y - sourceNode.y, dot = wx * ux + wy * uy, projX = sourceNode.x + dot * ux, projY = sourceNode.y + dot * uy, d = Math.hypot(rawPt.x - projX, rawPt.y - projY);
+            if (d < minDistLine) {
+              minDistLine = d; pt = { x: projX, y: projY };
+              currentSnapLine = { x1: sourceNode.x - ux * 9999, y1: sourceNode.y - uy * 9999, x2: sourceNode.x + ux * 9999, y2: sourceNode.y + uy * 9999 };
+            }
+          });
+        }
+      }
+      setSnapLine(currentSnapLine); 
+      setDragState(prev => ({ ...prev, currentX: pt.x, currentY: pt.y }));
+
+      if (dragState.type === 'move_node') setNodes(prev => prev.map(n => n.id === dragState.sourceNodeId ? { ...n, x: pt.x, y: pt.y } : n));
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if (dragState.type === 'move_selection' || dragState.type === 'rotate_selection') { setShouldSaveHistory(true); setDragState(initialDragState); return; }
+
+    if (dragState.type === 'wait_for_pan_or_right_click') {
+      const { targetType, targetId } = dragState;
+      if (['edge', 'edge_text', 'node', 'face', 'face_label', 'line', 'text'].includes(targetType)) executeDelete(new Set([targetId]));
+      setDragState(initialDragState); setSnapLine(null); setHoveredTarget({ id: null, type: null }); return;
+    }
+
+    if (dragState.type === 'box_select') {
+      const minX = Math.min(dragState.logicalStartX, dragState.currentX), maxX = Math.max(dragState.logicalStartX, dragState.currentX);
+      const minY = Math.min(dragState.logicalStartY, dragState.currentY), maxY = Math.max(dragState.logicalStartY, dragState.currentY);
+
+      const newSelected = new Set(e.shiftKey ? selectedIds : []);
+      nodes.forEach(n => { if (n.x >= minX && n.x <= maxX && n.y >= minY && n.y <= maxY) newSelected.add(n.id); });
+      lines.forEach(l => {
+        const lMinX = Math.min(...l.points.map(p=>p.x)), lMaxX = Math.max(...l.points.map(p=>p.x)), lMinY = Math.min(...l.points.map(p=>p.y)), lMaxY = Math.max(...l.points.map(p=>p.y));
+        const cx = (lMinX + lMaxX) / 2, cy = (lMinY + lMaxY) / 2;
+        if (cx >= minX && cx <= maxX && cy >= minY && cy <= maxY) newSelected.add(l.id);
+      });
+      texts.forEach(t => { if (t.x >= minX && t.x <= maxX && t.y >= minY && t.y <= maxY) newSelected.add(t.id); });
+
+      setSelectedIds(newSelected); setDragState(initialDragState); return;
+    }
+
+    if (dragState.type === 'draw_triangle_step1_end_down' || dragState.type === 'draw_triangle_step2_end_down') {
+      const isStep1 = dragState.type === 'draw_triangle_step1_end_down';
+      const pt = (snapLine || hoveredTarget.id) ? { x: dragState.currentX, y: dragState.currentY } : getLogicalPoint(e.clientX, e.clientY, camera, svgRef.current?.getBoundingClientRect());
+      const tId = hoveredTarget.id || e.target.getAttribute('data-id'), tType = hoveredTarget.type || e.target.getAttribute('data-type');
+      
+      let finalTargetId = null, isNode2New = false;
+      const invalidIds = isStep1 ? [dragState.sourceNodeId] : [dragState.triangleNode1, dragState.triangleNode2];
+
+      if (tType === 'node' && !invalidIds.includes(tId)) { finalTargetId = tId; }
+      else if (tType === 'edge') {
+        const edge = edges.find(ed => ed.id === tId), snapPt = getEdgeSnapPoint(pt, edge, nodes), newNode = { id: generateId(), x: snapPt.x, y: snapPt.y };
+        setNodes(prev => [...prev, newNode]); finalTargetId = newNode.id; isNode2New = true;
+      } else {
+        if (tType === 'node' && invalidIds.includes(tId)) { setDragState(p => ({ ...p, isDragging: false, type: isStep1 ? 'draw_triangle_step1' : 'draw_triangle_step2' })); setHoveredTarget({ id: null, type: null }); return; }
+        const newNode = { id: generateId(), x: pt.x, y: pt.y }; setNodes(prev => [...prev, newNode]); finalTargetId = newNode.id; isNode2New = true;
+      }
+
+      let newEdge1Id = null;
+      if (isStep1) {
+        const exists = edges.find(ed => (ed.source === dragState.sourceNodeId && ed.target === finalTargetId) || (ed.target === dragState.sourceNodeId && ed.source === finalTargetId));
+        if (!exists) { const newEdge = { id: generateId(), source: dragState.sourceNodeId, target: finalTargetId, length: null }; setEdges(prev => [...prev, newEdge]); newEdge1Id = newEdge.id; }
+        else newEdge1Id = exists.id;
+
+        if (edges.some(e1 => { const w = e1.source === dragState.sourceNodeId ? e1.target : (e1.target === dragState.sourceNodeId ? e1.source : null); return w && w !== finalTargetId && edges.some(e2 => (e2.source === w && e2.target === finalTargetId) || (e2.target === w && e2.source === finalTargetId)); })) {
+          setShouldSaveHistory(true); setDragState(initialDragState); setSnapLine(null); setHoveredTarget({ id: null, type: null }); return;
+        }
+
+        const newTracking = [...dragState.trackingNodeIds];
+        edges.forEach(ed => { if (ed.source === finalTargetId && !newTracking.includes(ed.target)) newTracking.push(ed.target); if (ed.target === finalTargetId && !newTracking.includes(ed.source)) newTracking.push(ed.source); });
+        if (!newTracking.includes(dragState.sourceNodeId)) newTracking.push(dragState.sourceNodeId);
+        
+        setDragState(p => ({ ...p, isDragging: false, type: 'draw_triangle_step2', triangleNode1: p.sourceNodeId, triangleNode2: finalTargetId, isNode2New, edge1Id: newEdge1Id, currentX: pt.x, currentY: pt.y, trackingNodeIds: newTracking }));
+      } else {
+        const newEdges = [];
+        if (!edges.some(ed => (ed.source === dragState.triangleNode2 && ed.target === finalTargetId) || (ed.target === dragState.triangleNode2 && ed.source === finalTargetId))) newEdges.push({ id: generateId(), source: dragState.triangleNode2, target: finalTargetId, length: null });
+        if (!edges.some(ed => (ed.source === finalTargetId && ed.target === dragState.triangleNode1) || (ed.target === finalTargetId && ed.source === dragState.triangleNode1))) newEdges.push({ id: generateId(), source: finalTargetId, target: dragState.triangleNode1, length: null });
+        if (newEdges.length > 0) setEdges(prev => [...prev, ...newEdges]);
+        setShouldSaveHistory(true); setDragState(initialDragState);
+      }
+      setSnapLine(null); setHoveredTarget({ id: null, type: null });
+
+    } else if (dragState.type === 'draw_line_start_down') {
+      const pt = (snapLine || hoveredTarget.id) ? { x: dragState.currentX, y: dragState.currentY } : getLogicalPoint(e.clientX, e.clientY, camera, svgRef.current?.getBoundingClientRect());
+      setDragState(prev => ({ ...initialDragState, type: 'draw_line_active', activeLinePoints: [{ x: pt.x, y: pt.y }], currentX: pt.x, currentY: pt.y, isCurveMode: prev.isCurveMode }));
+    } else if (dragState.type === 'draw_line_continue_down') {
+      const pt = (snapLine || hoveredTarget.id) ? { x: dragState.currentX, y: dragState.currentY } : getLogicalPoint(e.clientX, e.clientY, camera, svgRef.current?.getBoundingClientRect());
+      const lastPt = dragState.activeLinePoints[dragState.activeLinePoints.length - 1];
+      if (Math.hypot(pt.x - lastPt.x, pt.y - lastPt.y) > 0.1) setDragState(prev => ({ ...prev, type: 'draw_line_active', activeLinePoints: [...prev.activeLinePoints, { x: pt.x, y: pt.y }], currentX: pt.x, currentY: pt.y }));
+      else setDragState(prev => ({ ...prev, type: 'draw_line_active', currentX: pt.x, currentY: pt.y }));
+    } else if (dragState.type === 'wait_for_pan_or_click') {
+      const { targetType, targetId, logicalStartX, logicalStartY, startX, startY } = dragState, pt = { x: logicalStartX, y: logicalStartY };
+
+      if (targetType === 'face' || targetType === 'face_label') {
+        setSelectedIds(new Set([targetId])); setDragState(initialDragState); setFaceModalInfo({ isOpen: true, faceId: targetId, x: startX, y: startY });
+      } else if (targetType === 'edge') {
+        setSelectedIds(new Set());
+        const edge = edges.find(ed => ed.id === targetId), snapPt = getEdgeSnapPoint(pt, edge, nodes), newNode = { id: generateId(), x: snapPt.x, y: snapPt.y };
+        setNodes(prev => [...prev, newNode]);
+        setDragState({ ...initialDragState, type: 'draw_triangle_step1', sourceNodeId: newNode.id, startX: snapPt.x, startY: snapPt.y, currentX: snapPt.x, currentY: snapPt.y, isNewNode: true, trackingNodeIds: edge ? [edge.source, edge.target] : [] });
+        setSelectedIds(new Set([newNode.id]));
+      } else {
+        setSelectedIds(new Set());
+        const newNode = { id: generateId(), x: pt.x, y: pt.y }; setNodes(prev => [...prev, newNode]);
+        setDragState({ ...initialDragState, type: 'draw_triangle_step1', sourceNodeId: newNode.id, startX: pt.x, startY: pt.y, currentX: pt.x, currentY: pt.y, isNewNode: true });
+        setSelectedIds(new Set([newNode.id]));
+      }
+    } else if (dragState.type === 'node_down') {
+      setDragState({ ...initialDragState, type: 'draw_triangle_step1', sourceNodeId: dragState.sourceNodeId, startX: dragState.logicalStartX, startY: dragState.logicalStartY, currentX: dragState.logicalStartX, currentY: dragState.logicalStartY, trackingNodeIds: dragState.trackingNodeIds });
+      setHoveredTarget({ id: null, type: null });
+    } else if (dragState.type === 'pan') {
+      if (dragState.returnTo === 'draw_line_active') setDragState(prev => ({ ...prev, isDragging: false, type: 'draw_line_active' }));
+      else { setDragState(initialDragState); setSnapLine(null); setHoveredTarget({ id: null, type: null }); }
+    } else if (dragState.type === 'move_node') {
+      setShouldSaveHistory(true); setDragState(initialDragState); setSnapLine(null); setHoveredTarget({ id: null, type: null });
+    }
+  };
+
+  const getHintText = () => {
+    if (currentMode === 'select') {
+      if (dragState.type === 'box_select') return "ドラッグで矩形選択しています...";
+      if (dragState.type === 'move_selection') return "選択した要素をまとめて移動中...";
+      if (dragState.type === 'rotate_selection') return "選択した要素を回転中...";
+      return "左ドラッグで矩形選択 / 要素をクリックで選択 (Shiftで追加) / 選択後ドラッグで移動・回転";
+    }
+    if (dragState.type?.startsWith('draw_triangle')) return "次のポイントをクリックして三角形を作図 (右クリックでキャンセル)";
+    if (dragState.type === 'move_node') return "要素を移動中...";
+    if (dragState.type?.startsWith('draw_line_')) return "次のポイントをクリックして線を引く (右クリックで確定して終了)";
+    if (dragState.type === 'pan' || dragState.type === 'wait_for_pan_or_click') return "キャンバスを移動中...";
+    if (currentMode === 'line') return "左クリックで直線の始点を決定 / 要素クリックで選択";
+    if (currentMode === 'curve') return "左クリックで曲線の始点を決定 / 要素クリックで選択";
+    if (currentMode === 'text') return "クリックした場所にテキストを追加 / 要素クリックで編集";
+    if (hoveredTarget.type === 'face') return "面：左クリックで種類を選択 / 右クリックで削除";
+    if (hoveredTarget.type === 'edge') return "辺：左クリックでポイント追加・作図開始 / 右クリックで削除";
+    if (hoveredTarget.type === 'node') return "頂点：ドラッグで移動 / 左クリックで作図開始 / 右クリックで削除";
+    return "何もない場所を左クリックで新しいポイントを追加 / 右ドラッグで視点移動";
+  };
+
+  return (
+    <div className="flex h-screen w-full bg-slate-100 font-sans text-slate-800 overflow-hidden select-none relative" onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
+      <Toolbar currentMode={currentMode} setCurrentMode={setCurrentMode} onUndo={undo} onRedo={redo} canUndo={historyStep > 0} canRedo={historyStep < history.length - 1} onDelete={() => executeDelete()} canDelete={selectedIds.size > 0} onClearClick={() => setClearModalOpen(true)} onFitToView={handleFitToView} onPrintClick={() => setPrintModalOpen(true)} onExport={() => setExportModalOpen(true)} onImport={e => { handleFileLoad(e.target.files[0]); e.target.value = null; }} fileInputRef={fileInputRef} cancelDraw={cancelDraw} />
+      <div className="flex-1 relative bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMSIgZmlsbD0iI2QxZDVkYiIvPjwvc3ZnPg==')]">
+        <svg ref={svgRef} className={`w-full h-full touch-none ${dragState.type === 'pan' ? 'cursor-grabbing' : 'cursor-crosshair'}`} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerLeave={handlePointerUp} onWheel={handleWheel} onContextMenu={e => e.preventDefault()}>
+          <g id="drawing-layer" transform={`translate(${camera.x}, ${camera.y}) scale(${camera.zoom})`}>
+            <FacesLayer facesWithNumbers={facesWithNumbers} faceTypes={faceTypes} faceDeductions={faceDeductions} slopeTypes={slopeTypes} camera={camera} hoveredTarget={hoveredTarget} selectedIds={selectedIds} dragState={dragState} setHoveredTarget={setHoveredTarget} fractionDigits={fractionDigits} currentMode={currentMode} />
+            <EdgesLayer edges={edges} nodes={nodes} facesWithNumbers={facesWithNumbers} camera={camera} hoveredTarget={hoveredTarget} selectedIds={selectedIds} dragState={dragState} setHoveredTarget={setHoveredTarget} fractionDigits={fractionDigits} />
+            <AnnotationsLayer lines={lines} texts={texts} camera={camera} hoveredTarget={hoveredTarget} selectedIds={selectedIds} dragState={dragState} setHoveredTarget={setHoveredTarget} />
+            <SelectionUILayer selectedIds={selectedIds} currentMode={currentMode} nodes={nodes} lines={lines} texts={texts} edges={edges} faces={faces} camera={camera} />
+            <GuidesLayer dragState={dragState} snapLine={snapLine} hoveredTarget={hoveredTarget} nodes={nodes} edges={edges} camera={camera} />
+            {(currentMode === 'polygon' || currentMode === 'select') && <NodesLayer nodes={nodes} camera={camera} hoveredTarget={hoveredTarget} selectedIds={selectedIds} dragState={dragState} setHoveredTarget={setHoveredTarget} />}
+          </g>
+        </svg>
+
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-slate-800/80 backdrop-blur text-white px-5 py-2.5 rounded-full text-sm font-medium shadow-md pointer-events-none z-20 flex items-center gap-2"><IconInfo size={16} className="text-blue-300"/> {getHintText()}</div>
+
+        <LengthModal info={lengthModalInfo} defaultApply={defaultApplyLength} onClose={() => { setLengthModalInfo(p => ({ ...p, isOpen: false })); setHoveredTarget({ id: null, type: null }); setSelectedIds(new Set()); }} onConfirm={handleConfirmLength} />
+        <FaceModal info={faceModalInfo} slopeTypes={slopeTypes} faceTypes={faceTypes} faceDeductions={faceDeductions} onClose={() => { setFaceModalInfo(p => ({ ...p, isOpen: false })); setHoveredTarget({ id: null, type: null }); setSelectedIds(new Set()); }} onSelect={handleSelectFaceType} onAdd={handleAddFaceType} onToggleDeduction={(faceId, isDeduct) => { setFaceDeductions(prev => ({ ...prev, [faceId]: isDeduct })); setShouldSaveHistory(true); }} />
+        <TextModal info={textModalInfo} onClose={() => { setTextModalInfo(p => ({ ...p, isOpen: false })); setHoveredTarget({ id: null, type: null }); setSelectedIds(new Set()); }} onConfirm={handleConfirmText} />
+        <PrintModal isOpen={printModalOpen} onClose={() => setPrintModalOpen(false)} onPrint={handlePrintHTML} />
+        <ExportModal isOpen={exportModalOpen} onClose={() => setExportModalOpen(false)} onConfirm={handleExport} />
+        <ClearModal isOpen={clearModalOpen} onClose={() => setClearModalOpen(false)} onConfirm={handleClearAll} />
+      </div>
+
+      <PropertyPanel selectedIds={selectedIds} faces={facesWithNumbers} edges={edges} nodes={nodes} lines={lines} texts={texts} faceTypes={faceTypes} faceDeductions={faceDeductions} slopeTypes={slopeTypes} totalArea={totalArea} attributes={attributes} setFaceTypes={setFaceTypes} setFaceDeductions={setFaceDeductions} setShouldSaveHistory={setShouldSaveHistory} updateEdgeLength={updateEdgeLength} applyLengthToNode={applyLengthToNode} setSlopeTypes={setSlopeTypes} fractionDigits={fractionDigits} setFractionDigits={setFractionDigits} setLines={setLines} setTexts={setTexts} setAttributes={setAttributes} />
+      
+      {isDraggingOver && (
+        <div className="absolute inset-0 z-[200] bg-blue-500/20 backdrop-blur-sm flex items-center justify-center border-4 border-blue-500 border-dashed m-4 rounded-2xl pointer-events-none transition-all duration-200"><div className="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in duration-200"><IconUpload size={48} className="text-blue-500 animate-bounce" /><p className="text-xl font-bold text-slate-700">JSONファイルをドロップして読み込み</p></div></div>
+      )}
+    </div>
+  );
+}
+
+export default App;
