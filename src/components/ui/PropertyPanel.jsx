@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { IconMousePointer2, IconMinus, IconType, IconAlertCircle, IconEraser } from '../icons/Icons.jsx';
 
 export const PropertyPanel = ({ selectedIds, faces, edges, nodes, lines, texts, faceTypes, faceDeductions, slopeTypes, totalArea, attributes, setFaceTypes, setFaceDeductions, setShouldSaveHistory, updateEdgeLength, applyLengthToNode, setSlopeTypes, fractionDigits, setFractionDigits, setLines, setTexts, setAttributes }) => {
   const selectedIdArray = Array.from(selectedIds);

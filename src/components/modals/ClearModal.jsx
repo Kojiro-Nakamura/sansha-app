@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { IconTrash2 } from '../icons/Icons.jsx';
 
 export const ClearModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;

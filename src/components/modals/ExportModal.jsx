@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { IconDownload } from '../icons/Icons.jsx';
 
 export const ExportModal = ({ isOpen, onClose, onConfirm }) => {
   const [fileName, setFileName] = useState('');
