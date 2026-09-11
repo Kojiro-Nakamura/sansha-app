@@ -290,6 +290,7 @@ body.bw-mode .scale-container, body.bw-mode .title-container { color: #111 !impo
       <input type="text" id="setting-filename" value="${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}_展開図レイアウト.html" style="width: 180px; font-size:13px; padding:8px 10px; border-radius:6px; border:1px solid #475569; outline:none; background:#334155; color:white;" placeholder="ファイル名" />
       <button onclick="saveAsHTML()" style="padding: 8px 16px; background: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.2s;">HTML保存</button>
       <button onclick="window.print()" style="padding: 8px 24px; background: #3b82f6; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.2s;">印刷する</button>
+      <button onclick="window.close()" style="padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: background 0.2s; margin-left: 8px;" title="プレビューを閉じる">閉じる</button>
     </div>
   </div>
 </div>
