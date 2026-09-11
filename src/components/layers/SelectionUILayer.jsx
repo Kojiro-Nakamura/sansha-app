@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-
+import { getActiveMovableElements, getSelectionBoundingBox } from '../../utils/geometry.js';
 export const SelectionUILayer = React.memo(({ selectedIds, currentMode, nodes, lines, texts, edges, faces, camera }) => {
   if (selectedIds.size === 0 || currentMode !== 'select') return null;
   const elementsToMove = getActiveMovableElements(selectedIds, nodes, lines, texts, edges, faces);
