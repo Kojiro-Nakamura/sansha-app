@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-
+import { getEdgeSnapPoint, getSvgPathFromPoints } from '../../utils/geometry.js';
 export const GuidesLayer = React.memo(({ dragState, snapLine, hoveredTarget, nodes, edges, camera }) => {
   let drawEndX = dragState.currentX, drawEndY = dragState.currentY;
   if (dragState.type?.startsWith('draw_triangle') || dragState.type?.startsWith('draw_line_')) {
